@@ -1,0 +1,323 @@
+esphome:
+  name: airqualityplayaer 
+  friendly_name: Air Quality and Player
+
+esp32:
+  board: nodemcu-32s
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "VdYFcBK7U6asCylpGancIfuNSNI9mcSukauTN7WuR1g="
+
+ota:
+
+i2c:
+  sda: GPIO33 #green
+  scl: GPIO32 #yellow
+  scan: True
+
+wifi:
+  ssid: "Tenda_16EF40"
+  password: "1234567890"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Esphome-Web-airplayer"
+    password: "1234567890"
+
+
+captive_portal:
+
+media_player:
+  - platform: i2s_audio
+    name: "Air Player"  
+    dac_type: external
+    i2s_dout_pin: GPIO25 #green
+    i2s_lrclk_pin: GPIO26 #orange
+    i2s_bclk_pin: GPIO27 #yellow
+    mode: mono
+
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+  
+esp32_touch:
+
+binary_sensor:
+  # - platform: esp32_touch
+  #   name: "start timer"
+  #   id: start_counter
+  #   pin: GPIO27
+  #   threshold: 1000
+  #   filters:
+  #     - delayed_on: 200ms
+  - platform: tm1638
+    name: "Start Timer for 1 minute"
+    id: timer1minute
+    key: 0
+  - platform: tm1638
+    name: "Start Timer for 3 minutes"
+    id: timer3minutes
+    key: 1
+  - platform: tm1638
+    name: "Start Timer for 5 minutes"
+    id: timer5minutes
+    key: 2   
+  - platform: tm1638
+    name: "Start Timer for 10 minutes"
+    id: timer10minutes
+    key: 3
+  - platform: tm1638
+    name: "Start Timer for 15 minutes"
+    id: timer15minutes
+    key: 4       
+  - platform: tm1638
+    name: "reset gas alarm"
+    id: reset_gas_alarm
+    key: 7       
+  - platform: homeassistant 
+    name: "synch toggle"
+    id: "synchwithhaled"
+    entity_id: "input_boolean.synchtoggle"
+  - platform: gpio
+    name: "Binary Sensor"
+    id: gasdetectedbinary
+    pin:
+      number: GPIO19 #purple
+      mode: INPUT_PULLUP
+      inverted: true
+
+output:
+  - platform: tm1638
+    id: gasdetectedled
+    led: 0
+  - platform: tm1638
+    id: Led6
+    led: 6
+  - platform: tm1638
+    id: Led7
+    led: 7
+
+#Weather
+sensor:
+  - platform: homeassistant
+    id: currenttemperature
+    entity_id: sensor.openweathermap_temperature
+    internal: true
+  - platform: homeassistant
+    id: feelLiketemperature
+    entity_id: sensor.openweathermap_feels_like_temperature
+    internal: true
+  - platform: homeassistant
+    id: forecasttemperature
+    entity_id: sensor.openweathermap_forecast_temperature
+    internal: true
+  - platform: adc
+    pin: GPIO35 #blue
+    id: gasdetectorv
+    name: "Gas detector V"
+    update_interval: 2s
+  - platform: aht10 # internal temperature sensor
+    address: 0x38
+    update_interval: 2s
+    temperature:
+      name: "internal temperature"
+      id: internal_temperature
+      accuracy_decimals: 0
+      filters:
+        - sliding_window_moving_average:
+            window_size: 10
+            send_every: 10
+    humidity:
+      name: "internal Humidity"
+      id: internal_humidity
+      accuracy_decimals: 0
+      filters:
+        - sliding_window_moving_average:
+            window_size: 10
+            send_every: 10
+  - platform: bmp280 # barometer
+    address: 0x76
+    update_interval: 30s
+    temperature:
+      id: internal_temperature2
+      name: "Temperature 2"
+      accuracy_decimals: 0
+      filters:
+        - sliding_window_moving_average:
+            window_size: 10
+            send_every: 10
+    pressure:
+      id: air_preasure
+      name: "Air Pressure"
+      accuracy_decimals: 0
+      filters:
+        - sliding_window_moving_average:
+            window_size: 10
+            send_every: 10
+  - platform: rotary_encoder
+    name: "Rotary Encoder"
+    pin_a: GPIO12
+    pin_b: GPIO14
+    resolution: 2
+
+
+text_sensor:
+  - platform: homeassistant
+    id: "wethercondition"
+    name: "Wether Condition"
+    entity_id: sensor.openweathermap_condition 
+    internal: true
+  - platform: homeassistant
+    id: "forecastwethercondition"
+    name: "Forecast Wether Condition"
+    entity_id: sensor.openweathermap_forecast_condition
+    internal: true
+
+globals:
+  - id: global_timer_seconds
+    type: int
+    restore_value: no
+    initial_value: '0'    
+
+display:
+  platform: tm1638
+  id: tm1638_display
+  stb_pin: GPIO21 #whiie
+  clk_pin: GPIO22 #purple
+  dio_pin: GPIO23 #blue
+  intensity: 5
+  update_interval: 500ms
+  lambda: |-
+    char str[32];
+    // ESP_LOGI("main", str );
+
+    static int i = 1;
+    static int countdowntime = 0;
+    static int leftscreentimeframe = 6;
+    static int fraimtime = 4;
+    static int catchedi = 20; // 16 =fraimtime(4)*numbers of fraims(4)  
+    static bool gas_alart = false;
+
+      
+    i++;
+    if (i>15000){i=1;}  
+
+    // LEDS
+    if (i%2==0) { id(Led7).turn_on(); } 
+    else { id(Led7).turn_off(); }
+
+    // GAS leds
+    if (id(gasdetectedbinary).state and (i%2==0)) { id(gasdetectedled).turn_on(); } 
+    else { id(gasdetectedled).turn_off(); }
+
+
+    
+    // synch with HA indicator
+    if (i%5==0 ) 
+    { 
+        if ( id(synchwithhaled).state ) {id(Led6).turn_on();}
+        else { id(Led6).turn_off(); }
+    }
+    
+    // GAS alarm
+    if (id(gasdetectedbinary).state) {gas_alart = true;}
+    if (id(reset_gas_alarm).state) {gas_alart = false;}
+
+    if (!gas_alart)
+    {
+      // COUNTDOWN
+      if (id(timer1minute).state )   {countdowntime = 60;       it.printf(0, "        " );}      
+      if (id(timer3minutes).state )  {countdowntime = 3*60;   it.printf(0, "        " );}      
+      if (id(timer5minutes).state )  {countdowntime = 5*60;   it.printf(0, "        " );}      
+      if (id(timer10minutes).state ) {countdowntime = 10*60;  it.printf(0, "        " );}      
+      if (id(timer15minutes).state ) {countdowntime = 15*60;  it.printf(0, "        " );}      
+      if (countdowntime != 0 )
+      {
+        it.printf(0, "        " );
+        it.printf(0, "%u.%02d", countdowntime/60, countdowntime%60); 
+        // it.printf(0, "%u" ,countdowntime); 
+        countdowntime--; 
+        if (countdowntime == 0 ) { it.printf(0, "        " ); }
+      }
+
+      // WEATHER
+      if (countdowntime == 0)
+      {
+        if (i%(5*fraimtime) == 0) {catchedi = i;} // set numbers of fraims
+        
+        // feel like temp at first screen
+        it.printf(0, "        " ); // clean screen
+        it.printf(0, "%.f", id(feelLiketemperature).state); 
+        it.printf(3, "C");
+
+        if (i < catchedi + fraimtime)
+        { 
+          it.printf(4, "%.f", id(currenttemperature).state); 
+          it.printf(7, "c");
+        }
+        else if (i < catchedi + 2 * fraimtime)
+        { 
+          it.printf(4, "%.f", id(forecasttemperature).state ); 
+          it.printf(7, "F");
+        }
+        else if (i < catchedi + 3 * fraimtime)
+        { 
+          it.printf(0, "        " ); // clean screen
+          // first screen
+          if (id(wethercondition).state == "rainy" ) {it.printf(0, "rAin" ); }
+          else if (id(wethercondition).state == "cloudy") {it.printf(0, "clo"  ); }
+          else if (id(wethercondition).state == "fog"   ) {it.printf(0, "Fog"  ); }
+          else if (id(wethercondition).state == "snowy" ) {it.printf(0, "snig" ); }
+          else if (id(wethercondition).state == "sunny" ) {it.printf(0, "sun"  ); }
+          else if (id(wethercondition).state == "windy" ) {it.printf(0, "blo"  ); }
+          else {it.printf(0, "unno"  ); } 
+
+          // second screen
+          if (id(forecastwethercondition).state == "rainy" ) {it.printf(4, "rAin" ); }
+          else if (id(forecastwethercondition).state == "cloudy") {it.printf(4, "clo"  ); }
+          else if (id(forecastwethercondition).state == "fog"   ) {it.printf(4, "Fog"  ); }
+          else if (id(forecastwethercondition).state == "snowy" ) {it.printf(4, "snig" ); }
+          else if (id(forecastwethercondition).state == "sunny" ) {it.printf(4, "sun"  ); }
+          else if (id(forecastwethercondition).state == "windy" ) {it.printf(4, "blo"  ); }
+          else {it.printf(4, "unno"  ); } 
+
+        }
+        else if (i < catchedi + 4 * fraimtime)
+        {
+          it.printf(0, "t %.f", id(internal_temperature).state); 
+          it.printf(4, "h %.f", id(internal_humidity).state); 
+        }
+        else if (i < catchedi + 5 * fraimtime)
+        {
+          it.printf(0, "PrS "); 
+          it.printf(4, "%.f", id(air_preasure).state); 
+          
+          dtostrf(id(internal_temperature2).state, 8, 2, str);
+          ESP_LOGI("main", str );
+        }
+      }
+    }
+    else // if gas detected
+    {
+      if (i%2==0) 
+      { 
+        it.printf(0, "GAS " ); 
+        it.printf(4, "%.2f", id(gasdetectorv).state); 
+        id(gasdetectedled).turn_on();
+      }
+      else 
+      { 
+        it.printf(0, "    " ); 
+        it.printf(4, "%.2f ", id(gasdetectorv).state); 
+        id(gasdetectedled).turn_off();
+      }
+    }
+    

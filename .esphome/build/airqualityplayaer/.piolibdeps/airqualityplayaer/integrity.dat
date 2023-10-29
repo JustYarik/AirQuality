@@ -1,0 +1,12 @@
+esphome/AsyncTCP-esphome@1.2.2
+Wire
+HTTPClient
+esphome/ESP32-audioI2S@2.0.6
+esphome/ESPAsyncWebServer-esphome@2.1.0
+Update
+WiFi
+DNSServer
+ESPmDNS
+WiFiClientSecure
+FS
+esphome/noise-c@0.1.4

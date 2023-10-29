@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "../clock timer esp32"
+		},
+		{
+			"name": "AirQuality",
+			"path": "."
+		}
+	],
+	"settings": {}
+}
