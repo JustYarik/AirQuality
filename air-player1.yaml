@@ -36,11 +36,6 @@ time:
     id: ha_time
     timezone: Europe/Kiev
 
-# schedule:
-  # - cron: "0 5 * * *"
-    # then:
-      # - system_restart: true    
-
 captive_portal:
 
 i2s_audio:
@@ -98,6 +93,11 @@ binary_sensor:
     name: "Toggle kitchen soket"
     id: turnonkitchensoket
     key: 7       
+    on_press:
+     - homeassistant.service:
+        service: switch.toggle
+        data:
+          entity_id: "switch.soket_switch"
   - platform: homeassistant 
     name: "Kitchen Soket"
     id: "kitchensoket"

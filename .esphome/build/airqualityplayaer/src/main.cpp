@@ -34,6 +34,9 @@ tm1638::TM1638Key *timer15minutes;
 tm1638::TM1638Key *previus_frame;
 tm1638::TM1638Key *next_frame;
 tm1638::TM1638Key *turnonkitchensoket;
+binary_sensor::PressTrigger *binary_sensor_presstrigger;
+Automation<> *automation;
+api::HomeAssistantServiceCallAction<> *api_homeassistantservicecallaction;
 homeassistant::HomeassistantBinarySensor *kitchensoket;
 homeassistant::HomeassistantBinarySensor *synchwithhaled;
 gpio::GPIOBinarySensor *gasdetectedbinary;
@@ -68,7 +71,7 @@ rotary_encoder::RotaryEncoderSensor *rotary_encoder_rotaryencodersensor;
 esp32::ESP32InternalGPIOPin *esp32_esp32internalgpiopin_3;
 esp32::ESP32InternalGPIOPin *esp32_esp32internalgpiopin_4;
 rotary_encoder::RotaryEncoderClockwiseTrigger *rotary_encoder_rotaryencoderclockwisetrigger;
-Automation<> *automation;
+Automation<> *automation_2;
 homeassistant::HomeassistantTextSensor *wethercondition;
 homeassistant::HomeassistantTextSensor *forecastwethercondition;
 tm1638::TM1638Component *tm1638_display;
@@ -80,7 +83,7 @@ globals::GlobalsComponent<int> *glogal_timer_adjustment;
 globals::GlobalsComponent<int> *global_init_timer_seconds;
 LambdaAction<> *lambdaaction;
 rotary_encoder::RotaryEncoderAnticlockwiseTrigger *rotary_encoder_rotaryencoderanticlockwisetrigger;
-Automation<> *automation_2;
+Automation<> *automation_3;
 LambdaAction<> *lambdaaction_2;
 #define yield() esphome::yield()
 #define millis() esphome::millis()
@@ -384,6 +387,18 @@ void setup() {
   //   name: Toggle kitchen soket
   //   id: turnonkitchensoket
   //   key: 7
+  //   on_press:
+  //   - then:
+  //     - homeassistant.service:
+  //         service: switch.toggle
+  //         data:
+  //           entity_id: switch.soket_switch
+  //         id: api_apiserver
+  //         data_template: {}
+  //         variables: {}
+  //       type_id: api_homeassistantservicecallaction
+  //     automation_id: automation
+  //     trigger_id: binary_sensor_presstrigger
   //   disabled_by_default: false
   //   tm1638_id: tm1638_display
   turnonkitchensoket = new tm1638::TM1638Key();
@@ -391,6 +406,12 @@ void setup() {
   turnonkitchensoket->set_name("Toggle kitchen soket");
   turnonkitchensoket->set_object_id("toggle_kitchen_soket");
   turnonkitchensoket->set_disabled_by_default(false);
+  binary_sensor_presstrigger = new binary_sensor::PressTrigger(turnonkitchensoket);
+  automation = new Automation<>(binary_sensor_presstrigger);
+  api_homeassistantservicecallaction = new api::HomeAssistantServiceCallAction<>(api_apiserver, false);
+  api_homeassistantservicecallaction->set_service("switch.toggle");
+  api_homeassistantservicecallaction->add_data("entity_id", "switch.soket_switch");
+  automation->add_actions({api_homeassistantservicecallaction});
   turnonkitchensoket->set_keycode(7);
   // binary_sensor.homeassistant:
   //   platform: homeassistant
@@ -788,8 +809,8 @@ void setup() {
   //       pullup: false
   //       pulldown: false
   //     id: esp32_esp32internalgpiopin_3
-  //     inverted: false
   //     drive_strength: 20.0
+  //     inverted: false
   //   pin_b:
   //     number: 14
   //     mode:
@@ -799,8 +820,8 @@ void setup() {
   //       pullup: false
   //       pulldown: false
   //     id: esp32_esp32internalgpiopin_4
-  //     inverted: false
   //     drive_strength: 20.0
+  //     inverted: false
   //   resolution: 2
   //   on_clockwise:
   //   - then:
@@ -808,7 +829,7 @@ void setup() {
   //         id(global_timer_seconds) = id(global_timer_seconds) + (30 - id(global_timer_seconds)%30) ;
   //         id(glogal_timer_adjustment) = 3;
   //       type_id: lambdaaction
-  //     automation_id: automation
+  //     automation_id: automation_2
   //     trigger_id: rotary_encoder_rotaryencoderclockwisetrigger
   //   on_anticlockwise:
   //   - then:
@@ -817,7 +838,7 @@ void setup() {
   //         \ ; }\n  else  {id(global_timer_seconds) = id(global_timer_seconds) - 30; }
   //         \ \n}\nelse {id(global_timer_seconds) = 0;}\nid(glogal_timer_adjustment) = 3;"
   //       type_id: lambdaaction_2
-  //     automation_id: automation_2
+  //     automation_id: automation_3
   //     trigger_id: rotary_encoder_rotaryencoderanticlockwisetrigger
   //   disabled_by_default: false
   //   force_update: false
@@ -854,7 +875,7 @@ void setup() {
   rotary_encoder_rotaryencodersensor->set_restore_mode(rotary_encoder::ROTARY_ENCODER_RESTORE_DEFAULT_ZERO);
   rotary_encoder_rotaryencodersensor->set_resolution(rotary_encoder::ROTARY_ENCODER_2_PULSES_PER_CYCLE);
   rotary_encoder_rotaryencoderclockwisetrigger = new rotary_encoder::RotaryEncoderClockwiseTrigger(rotary_encoder_rotaryencodersensor);
-  automation = new Automation<>(rotary_encoder_rotaryencoderclockwisetrigger);
+  automation_2 = new Automation<>(rotary_encoder_rotaryencoderclockwisetrigger);
   // text_sensor.homeassistant:
   //   platform: homeassistant
   //   id: wethercondition
@@ -899,8 +920,8 @@ void setup() {
   //       pullup: false
   //       pulldown: false
   //     id: esp32_esp32internalgpiopin_5
-  //     inverted: false
   //     drive_strength: 20.0
+  //     inverted: false
   //   clk_pin:
   //     number: 22
   //     mode:
@@ -910,8 +931,8 @@ void setup() {
   //       pullup: false
   //       pulldown: false
   //     id: esp32_esp32internalgpiopin_6
-  //     inverted: false
   //     drive_strength: 20.0
+  //     inverted: false
   //   dio_pin:
   //     number: 23
   //     mode:
@@ -921,8 +942,8 @@ void setup() {
   //       pullup: false
   //       pulldown: false
   //     id: esp32_esp32internalgpiopin_7
-  //     inverted: false
   //     drive_strength: 20.0
+  //     inverted: false
   //   intensity: 5
   //   update_interval: 100ms
   //   lambda: !lambda "char str[32];\n dtostrf(i, 8, 2, str);\n ESP_LOGI(\"main\", str
@@ -1099,7 +1120,7 @@ void setup() {
   global_init_timer_seconds->set_component_source("globals");
   App.register_component(global_init_timer_seconds);
   tm1638_display->set_writer([=](tm1638::TM1638Component & it) -> void {
-      #line 273 "air-player1.yaml"
+      #line 289 "air-player1.yaml"
       char str[32];
        
        
@@ -1340,21 +1361,21 @@ void setup() {
       if (i> 8 * fraimtime) {i=0;}  
   });
   timer_is_active->set_template([=]() -> optional<bool> {
-      #line 127 "air-player1.yaml"
+      #line 143 "air-player1.yaml"
        
       if (global_timer_seconds->value() != 0 ) { return true; } 
       else { return false; }
   });
   lambdaaction = new LambdaAction<>([=]() -> void {
-      #line 224 "air-player1.yaml"
+      #line 240 "air-player1.yaml"
       global_timer_seconds->value() = global_timer_seconds->value() + (30 - global_timer_seconds->value()%30) ;
       glogal_timer_adjustment->value() = 3;
   });
-  automation->add_actions({lambdaaction});
+  automation_2->add_actions({lambdaaction});
   rotary_encoder_rotaryencoderanticlockwisetrigger = new rotary_encoder::RotaryEncoderAnticlockwiseTrigger(rotary_encoder_rotaryencodersensor);
-  automation_2 = new Automation<>(rotary_encoder_rotaryencoderanticlockwisetrigger);
+  automation_3 = new Automation<>(rotary_encoder_rotaryencoderanticlockwisetrigger);
   lambdaaction_2 = new LambdaAction<>([=]() -> void {
-      #line 228 "air-player1.yaml"
+      #line 244 "air-player1.yaml"
       if ( global_timer_seconds->value() >= 30 )
       { 
         if (global_timer_seconds->value()%30 != 0 )
@@ -1364,7 +1385,7 @@ void setup() {
       else {global_timer_seconds->value() = 0;}
       glogal_timer_adjustment->value() = 3;
   });
-  automation_2->add_actions({lambdaaction_2});
+  automation_3->add_actions({lambdaaction_2});
   // =========== AUTO GENERATED CODE END ============
   App.setup();
 }
