@@ -97,7 +97,7 @@ binary_sensor:
      - homeassistant.service:
         service: switch.toggle
         data:
-          entity_id: "switch.soket_switch"
+          entity_id: "switch.soket_switch" 
   - platform: homeassistant 
     name: "Kitchen Soket"
     id: "kitchensoket"
