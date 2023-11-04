@@ -279,13 +279,14 @@ display:
 
     // static int catchedi = 20; // 16 =fraimtime(4)*numbers of fraims(4)  
     static int i = 0;
-    static int j = 1000;
+    static int j = 1500;
     static int countdowntime = 0;
     static int fraimtime = 40; // in terms of display update_interval-s  (4 sec)
     static bool gas_alart = false;
     static bool next_frame_button_released = false;
     static bool prev_frame_button_released = false;
     static bool exist_conntction_to_ha = false;
+    static bool iniialLoaded = false;
 
     static float feel_like_temperature = -42; //id(feelLiketemperature).state;
     static float forecast_temperature = -42; //id(forecasttemperature).state;
@@ -298,6 +299,12 @@ display:
     countdowntime = id(global_timer_seconds); 
     if ( i>15000 ){ i=0; }  
     if ( j>15000 ){ j=0; }  
+
+    if (iniialLoaded == false and j % 50 == 0)
+    {
+        if( id(synchwithhaled).state)
+        { iniialLoaded = true; j = 2950; } 
+    }
 
     // Get data form HA
     j++;

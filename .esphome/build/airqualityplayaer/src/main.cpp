@@ -787,8 +787,8 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     drive_strength: 20.0
   //     inverted: false
+  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_3
   //   pin_b:
   //     number: 14
@@ -798,8 +798,8 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     drive_strength: 20.0
   //     inverted: false
+  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_4
   //   resolution: 2
   //   on_clockwise:
@@ -898,8 +898,8 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     drive_strength: 20.0
   //     inverted: false
+  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_5
   //   clk_pin:
   //     number: 22
@@ -909,8 +909,8 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     drive_strength: 20.0
   //     inverted: false
+  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_6
   //   dio_pin:
   //     number: 23
@@ -920,44 +920,45 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     drive_strength: 20.0
   //     inverted: false
+  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_7
   //   intensity: 5
   //   update_interval: 100ms
   //   lambda: !lambda "char str[32];\n dtostrf(i, 8, 2, str);\n ESP_LOGI(\"main\", str
   //     \ );\n\n static int catchedi = 20;  16 =fraimtime(4)*numbers of fraims(4)  \n
-  //     static int i = 0;\nstatic int j = 1000;\nstatic int countdowntime = 0;\nstatic int
+  //     static int i = 0;\nstatic int j = 1500;\nstatic int countdowntime = 0;\nstatic int
   //     \ fraimtime = 40;  in terms of display update_interval-s  (4 sec)\nstatic bool
   //     \ gas_alart = false;\nstatic bool next_frame_button_released = false;\nstatic bool
   //     \ prev_frame_button_released = false;\nstatic bool exist_conntction_to_ha = false;\n
-  //     \nstatic float feel_like_temperature = -42; id(feelLiketemperature).state;\nstatic
-  //     \ float forecast_temperature = -42; id(forecasttemperature).state;\nstatic float
-  //     \ current_temperature = -42; id(currenttemperature).state;\nstatic std::string
+  //     static bool iniialLoaded = false;\n\nstatic float feel_like_temperature = -42; id(feelLiketemperature).state;\n
+  //     static float forecast_temperature = -42; id(forecasttemperature).state;\nstatic
+  //     \ float current_temperature = -42; id(currenttemperature).state;\nstatic std::string
   //     \ wether_condition = \"unLo\"; id(wethercondition).state;\nstatic std::string
   //     \ forecast_wether_condition = \"unLo\"; id(forecastwethercondition).state;\n \n
   //     \n\ncountdowntime = id(global_timer_seconds); \nif ( i>15000 ){ i=0; }  \nif ( j>15000
-  //     \ ){ j=0; }  \n\n Get data form HA\nj++;\nif ( j % 3000 == 0 )  get data from
-  //     \ HA every 5 mins\n{\n  feel_like_temperature     = id(feelLiketemperature).state;
-  //     \ \n  forecast_temperature      = id(forecasttemperature).state; \n  current_temperature
-  //     \       = id(currenttemperature).state;\n  wether_condition          = id(wethercondition).state;
-  //     \ \n  forecast_wether_condition = id(forecastwethercondition).state;\n  j=1;\n}\n
-  //     \nif(id(kitchensoket).state)\n{ id(LedKitchenSoket).turn_on(); }\nelse { id(LedKitchenSoket).turn_off();
-  //     \ }\n switch frame\n\n       next frame\nif ( \n         id(next_frame).state
-  //     \ \n    and next_frame_button_released   \n   ) \n{\n  it.printf(0, \"        \"
-  //     \ );\n  i = i + (fraimtime - i%fraimtime) ;\n   skip first 3 fraims becaues it
-  //     \ shows same data\n  if ( i < 3 * fraimtime ) { i = 3 * fraimtime; }\n  next_frame_button_released
-  //     \ = false;\n}\nelse if(!id(next_frame).state) {next_frame_button_released = true;}\n
-  //     \       previus frame\nif ( \n        id(previus_frame).state \n    and i > 0
-  //     \ \n    and prev_frame_button_released \n   ) \n{ \n  it.printf(0, \"        \"
-  //     \ );\n   skip first 3 fraims becaues it shows same data\n  if (i < 3 * fraimtime)
-  //     \ \n  { i = 7 * fraimtime; }  last frame \n  else if \n  (\n        i > 3 * fraimtime
-  //     \ \n    and i < 4 * fraimtime\n  ) \n  { i=0; }\n  else { i = i - (fraimtime + i%fraimtime)
-  //     \ ; }\n  prev_frame_button_released = false;\n}\nelse if(!id(previus_frame).state)
-  //     \ {prev_frame_button_released = true;}\n\n\n dtostrf(i, 8, 2, str);\n ESP_LOGI(\"
-  //     main\", str );\n\n GAS leds\nif (id(gasdetectedbinary).state and (i%20<10)) {
-  //     \ id(gasdetectedled).turn_on(); } \nelse { id(gasdetectedled).turn_off(); }\n\n
-  //      set timer adjustment\nif (id(set_timer_adjustment).state) {id(glogal_timer_adjustment)
+  //     \ ){ j=0; }  \n\nif (iniialLoaded == false and j % 50 == 0)\n{\n    if( id(synchwithhaled).state)\n
+  //     \    { iniialLoaded = true; j = 2900; } \n}\n\n Get data form HA\nj++;\nif ( j
+  //     \ % 3000 == 0 )  get data from HA every 5 mins\n{\n  feel_like_temperature   
+  //     \  = id(feelLiketemperature).state; \n  forecast_temperature      = id(forecasttemperature).state;
+  //     \ \n  current_temperature       = id(currenttemperature).state;\n  wether_condition
+  //     \          = id(wethercondition).state; \n  forecast_wether_condition = id(forecastwethercondition).state;\n
+  //     \  j=1;\n}\n\nif(id(kitchensoket).state)\n{ id(LedKitchenSoket).turn_on(); }\nelse
+  //     \ { id(LedKitchenSoket).turn_off(); }\n switch frame\n\n       next frame\n
+  //     if ( \n         id(next_frame).state \n    and next_frame_button_released   \n 
+  //     \  ) \n{\n  it.printf(0, \"        \" );\n  i = i + (fraimtime - i%fraimtime) ;\n
+  //     \   skip first 3 fraims becaues it shows same data\n  if ( i < 3 * fraimtime )
+  //     \ { i = 3 * fraimtime; }\n  next_frame_button_released = false;\n}\nelse if(!id(next_frame).state)
+  //     \ {next_frame_button_released = true;}\n       previus frame\nif ( \n        id(previus_frame).state
+  //     \ \n    and i > 0 \n    and prev_frame_button_released \n   ) \n{ \n  it.printf(0,
+  //     \ \"        \" );\n   skip first 3 fraims becaues it shows same data\n  if (i
+  //     \ < 3 * fraimtime) \n  { i = 7 * fraimtime; }  last frame \n  else if \n  (\n
+  //     \        i > 3 * fraimtime \n    and i < 4 * fraimtime\n  ) \n  { i=0; }\n  else
+  //     \ { i = i - (fraimtime + i%fraimtime) ; }\n  prev_frame_button_released = false;\n
+  //     }\nelse if(!id(previus_frame).state) {prev_frame_button_released = true;}\n\n\n
+  //      dtostrf(i, 8, 2, str);\n ESP_LOGI(\"main\", str );\n\n GAS leds\nif (id(gasdetectedbinary).state
+  //     \ and (i%20<10)) { id(gasdetectedled).turn_on(); } \nelse { id(gasdetectedled).turn_off();
+  //     \ }\n\n set timer adjustment\nif (id(set_timer_adjustment).state) {id(glogal_timer_adjustment)
   //     \ = 0;}\nif (id(glogal_timer_adjustment) != 0 and i%10 == 0) {id(glogal_timer_adjustment)--;}
   //     \ \n\n synch with HA indicator\nif (i%150==0 ) \n{ \n    if ( id(synchwithhaled).state
   //     \ ) { exist_conntction_to_ha = true; }\n    else { exist_conntction_to_ha = false;
@@ -1106,13 +1107,14 @@ void setup() {
       
        
       static int i = 0;
-      static int j = 1000;
+      static int j = 1500;
       static int countdowntime = 0;
       static int fraimtime = 40;  
       static bool gas_alart = false;
       static bool next_frame_button_released = false;
       static bool prev_frame_button_released = false;
       static bool exist_conntction_to_ha = false;
+      static bool iniialLoaded = false;
       
       static float feel_like_temperature = -42;  
       static float forecast_temperature = -42;  
@@ -1125,6 +1127,12 @@ void setup() {
       countdowntime = global_timer_seconds->value(); 
       if ( i>15000 ){ i=0; }  
       if ( j>15000 ){ j=0; }  
+      
+      if (iniialLoaded == false and j % 50 == 0)
+      {
+          if( synchwithhaled->state)
+          { iniialLoaded = true; j = 2900; } 
+      }
       
        
       j++;
