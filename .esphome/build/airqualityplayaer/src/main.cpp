@@ -34,7 +34,7 @@ tm1638::TM1638Key *timer15minutes;
 tm1638::TM1638Key *previus_frame;
 tm1638::TM1638Key *next_frame;
 tm1638::TM1638Key *turnonkitchensoket;
-binary_sensor::PressTrigger *binary_sensor_presstrigger;
+binary_sensor::ClickTrigger *binary_sensor_clicktrigger;
 Automation<> *automation;
 api::HomeAssistantServiceCallAction<> *api_homeassistantservicecallaction;
 homeassistant::HomeassistantBinarySensor *kitchensoket;
@@ -387,8 +387,10 @@ void setup() {
   //   name: Toggle kitchen soket
   //   id: turnonkitchensoket
   //   key: 7
-  //   on_press:
-  //   - then:
+  //   on_click:
+  //   - min_length: 50ms
+  //     max_length: 350ms
+  //     then:
   //     - homeassistant.service:
   //         service: switch.toggle
   //         data:
@@ -398,7 +400,7 @@ void setup() {
   //         variables: {}
   //       type_id: api_homeassistantservicecallaction
   //     automation_id: automation
-  //     trigger_id: binary_sensor_presstrigger
+  //     trigger_id: binary_sensor_clicktrigger
   //   disabled_by_default: false
   //   tm1638_id: tm1638_display
   turnonkitchensoket = new tm1638::TM1638Key();
@@ -406,8 +408,8 @@ void setup() {
   turnonkitchensoket->set_name("Toggle kitchen soket");
   turnonkitchensoket->set_object_id("toggle_kitchen_soket");
   turnonkitchensoket->set_disabled_by_default(false);
-  binary_sensor_presstrigger = new binary_sensor::PressTrigger(turnonkitchensoket);
-  automation = new Automation<>(binary_sensor_presstrigger);
+  binary_sensor_clicktrigger = new binary_sensor::ClickTrigger(turnonkitchensoket, 50, 350);
+  automation = new Automation<>(binary_sensor_clicktrigger);
   api_homeassistantservicecallaction = new api::HomeAssistantServiceCallAction<>(api_apiserver, false);
   api_homeassistantservicecallaction->set_service("switch.toggle");
   api_homeassistantservicecallaction->add_data("entity_id", "switch.soket_switch");
@@ -458,8 +460,8 @@ void setup() {
   //       open_drain: false
   //       pulldown: false
   //     inverted: true
-  //     id: esp32_esp32internalgpiopin
   //     drive_strength: 20.0
+  //     id: esp32_esp32internalgpiopin
   //   disabled_by_default: false
   gasdetectedbinary = new gpio::GPIOBinarySensor();
   App.register_binary_sensor(gasdetectedbinary);
@@ -487,8 +489,8 @@ void setup() {
   //       open_drain: false
   //       pulldown: false
   //     inverted: true
-  //     id: esp32_esp32internalgpiopin_2
   //     drive_strength: 20.0
+  //     id: esp32_esp32internalgpiopin_2
   //   disabled_by_default: false
   set_timer_adjustment = new gpio::GPIOBinarySensor();
   App.register_binary_sensor(set_timer_adjustment);
@@ -808,9 +810,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     id: esp32_esp32internalgpiopin_3
   //     drive_strength: 20.0
   //     inverted: false
+  //     id: esp32_esp32internalgpiopin_3
   //   pin_b:
   //     number: 14
   //     mode:
@@ -819,9 +821,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     id: esp32_esp32internalgpiopin_4
   //     drive_strength: 20.0
   //     inverted: false
+  //     id: esp32_esp32internalgpiopin_4
   //   resolution: 2
   //   on_clockwise:
   //   - then:
@@ -919,9 +921,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     id: esp32_esp32internalgpiopin_5
   //     drive_strength: 20.0
   //     inverted: false
+  //     id: esp32_esp32internalgpiopin_5
   //   clk_pin:
   //     number: 22
   //     mode:
@@ -930,9 +932,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     id: esp32_esp32internalgpiopin_6
   //     drive_strength: 20.0
   //     inverted: false
+  //     id: esp32_esp32internalgpiopin_6
   //   dio_pin:
   //     number: 23
   //     mode:
@@ -941,9 +943,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     id: esp32_esp32internalgpiopin_7
   //     drive_strength: 20.0
   //     inverted: false
+  //     id: esp32_esp32internalgpiopin_7
   //   intensity: 5
   //   update_interval: 100ms
   //   lambda: !lambda "char str[32];\n dtostrf(i, 8, 2, str);\n ESP_LOGI(\"main\", str
@@ -1120,7 +1122,7 @@ void setup() {
   global_init_timer_seconds->set_component_source("globals");
   App.register_component(global_init_timer_seconds);
   tm1638_display->set_writer([=](tm1638::TM1638Component & it) -> void {
-      #line 289 "air-player1.yaml"
+      #line 276 "air-player1.yaml"
       char str[32];
        
        
@@ -1361,13 +1363,13 @@ void setup() {
       if (i> 8 * fraimtime) {i=0;}  
   });
   timer_is_active->set_template([=]() -> optional<bool> {
-      #line 143 "air-player1.yaml"
+      #line 130 "air-player1.yaml"
        
       if (global_timer_seconds->value() != 0 ) { return true; } 
       else { return false; }
   });
   lambdaaction = new LambdaAction<>([=]() -> void {
-      #line 240 "air-player1.yaml"
+      #line 227 "air-player1.yaml"
       global_timer_seconds->value() = global_timer_seconds->value() + (30 - global_timer_seconds->value()%30) ;
       glogal_timer_adjustment->value() = 3;
   });
@@ -1375,7 +1377,7 @@ void setup() {
   rotary_encoder_rotaryencoderanticlockwisetrigger = new rotary_encoder::RotaryEncoderAnticlockwiseTrigger(rotary_encoder_rotaryencodersensor);
   automation_3 = new Automation<>(rotary_encoder_rotaryencoderanticlockwisetrigger);
   lambdaaction_2 = new LambdaAction<>([=]() -> void {
-      #line 244 "air-player1.yaml"
+      #line 231 "air-player1.yaml"
       if ( global_timer_seconds->value() >= 30 )
       { 
         if (global_timer_seconds->value()%30 != 0 )
