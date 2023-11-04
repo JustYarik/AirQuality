@@ -437,8 +437,8 @@ void setup() {
   //       open_drain: false
   //       pulldown: false
   //     inverted: true
-  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin
+  //     drive_strength: 20.0
   //   disabled_by_default: false
   gasdetectedbinary = new gpio::GPIOBinarySensor();
   App.register_binary_sensor(gasdetectedbinary);
@@ -466,8 +466,8 @@ void setup() {
   //       open_drain: false
   //       pulldown: false
   //     inverted: true
-  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_2
+  //     drive_strength: 20.0
   //   disabled_by_default: false
   set_timer_adjustment = new gpio::GPIOBinarySensor();
   App.register_binary_sensor(set_timer_adjustment);
@@ -787,9 +787,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     inverted: false
-  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_3
+  //     drive_strength: 20.0
+  //     inverted: false
   //   pin_b:
   //     number: 14
   //     mode:
@@ -798,9 +798,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     inverted: false
-  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_4
+  //     drive_strength: 20.0
+  //     inverted: false
   //   resolution: 2
   //   on_clockwise:
   //   - then:
@@ -898,9 +898,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     inverted: false
-  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_5
+  //     drive_strength: 20.0
+  //     inverted: false
   //   clk_pin:
   //     number: 22
   //     mode:
@@ -909,9 +909,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     inverted: false
-  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_6
+  //     drive_strength: 20.0
+  //     inverted: false
   //   dio_pin:
   //     number: 23
   //     mode:
@@ -920,9 +920,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     inverted: false
-  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_7
+  //     drive_strength: 20.0
+  //     inverted: false
   //   intensity: 5
   //   update_interval: 100ms
   //   lambda: !lambda "char str[32];\n dtostrf(i, 8, 2, str);\n ESP_LOGI(\"main\", str
@@ -931,34 +931,35 @@ void setup() {
   //     \ fraimtime = 40;  in terms of display update_interval-s  (4 sec)\nstatic bool
   //     \ gas_alart = false;\nstatic bool next_frame_button_released = false;\nstatic bool
   //     \ prev_frame_button_released = false;\nstatic bool exist_conntction_to_ha = false;\n
-  //     static bool iniialLoaded = false;\n\nstatic float feel_like_temperature = -42; id(feelLiketemperature).state;\n
-  //     static float forecast_temperature = -42; id(forecasttemperature).state;\nstatic
-  //     \ float current_temperature = -42; id(currenttemperature).state;\nstatic std::string
-  //     \ wether_condition = \"unLo\"; id(wethercondition).state;\nstatic std::string
-  //     \ forecast_wether_condition = \"unLo\"; id(forecastwethercondition).state;\n \n
-  //     \n\ncountdowntime = id(global_timer_seconds); \nif ( i>15000 ){ i=0; }  \nif ( j>15000
-  //     \ ){ j=0; }  \n\nif (iniialLoaded == false and j % 50 == 0)\n{\n    if( id(synchwithhaled).state)\n
-  //     \    { iniialLoaded = true; j = 2900; } \n}\n\n Get data form HA\nj++;\nif ( j
-  //     \ % 3000 == 0 )  get data from HA every 5 mins\n{\n  feel_like_temperature   
-  //     \  = id(feelLiketemperature).state; \n  forecast_temperature      = id(forecasttemperature).state;
-  //     \ \n  current_temperature       = id(currenttemperature).state;\n  wether_condition
-  //     \          = id(wethercondition).state; \n  forecast_wether_condition = id(forecastwethercondition).state;\n
-  //     \  j=1;\n}\n\nif(id(kitchensoket).state)\n{ id(LedKitchenSoket).turn_on(); }\nelse
-  //     \ { id(LedKitchenSoket).turn_off(); }\n switch frame\n\n       next frame\n
-  //     if ( \n         id(next_frame).state \n    and next_frame_button_released   \n 
-  //     \  ) \n{\n  it.printf(0, \"        \" );\n  i = i + (fraimtime - i%fraimtime) ;\n
-  //     \   skip first 3 fraims becaues it shows same data\n  if ( i < 3 * fraimtime )
-  //     \ { i = 3 * fraimtime; }\n  next_frame_button_released = false;\n}\nelse if(!id(next_frame).state)
-  //     \ {next_frame_button_released = true;}\n       previus frame\nif ( \n        id(previus_frame).state
-  //     \ \n    and i > 0 \n    and prev_frame_button_released \n   ) \n{ \n  it.printf(0,
-  //     \ \"        \" );\n   skip first 3 fraims becaues it shows same data\n  if (i
-  //     \ < 3 * fraimtime) \n  { i = 7 * fraimtime; }  last frame \n  else if \n  (\n
-  //     \        i > 3 * fraimtime \n    and i < 4 * fraimtime\n  ) \n  { i=0; }\n  else
-  //     \ { i = i - (fraimtime + i%fraimtime) ; }\n  prev_frame_button_released = false;\n
-  //     }\nelse if(!id(previus_frame).state) {prev_frame_button_released = true;}\n\n\n
-  //      dtostrf(i, 8, 2, str);\n ESP_LOGI(\"main\", str );\n\n GAS leds\nif (id(gasdetectedbinary).state
-  //     \ and (i%20<10)) { id(gasdetectedled).turn_on(); } \nelse { id(gasdetectedled).turn_off();
-  //     \ }\n\n set timer adjustment\nif (id(set_timer_adjustment).state) {id(glogal_timer_adjustment)
+  //     static bool connectionToHAEstablished = false;\n\nstatic float feel_like_temperature
+  //     \ = -42; id(feelLiketemperature).state;\nstatic float forecast_temperature = -42;
+  //     \ id(forecasttemperature).state;\nstatic float current_temperature = -42; id(currenttemperature).state;\n
+  //     static std::string wether_condition = \"unLo\"; id(wethercondition).state;\nstatic
+  //     \ std::string forecast_wether_condition = \"unLo\"; id(forecastwethercondition).state;\n
+  //     \ \n\n\ncountdowntime = id(global_timer_seconds); \nif ( i>15000 ){ i=0; }  \nif
+  //     \ ( j>15000 ){ j=0; }  \n\nif (connectionToHAEstablished == false and j % 50 ==
+  //     \ 0)\n{\n    if( id(synchwithhaled).state)\n    { connectionToHAEstablished = true;
+  //     \ j = 2950; } \n}\n\n Get data form HA\nj++;\nif ( j % 3000 == 0 )  get data
+  //     \ from HA every 5 mins\n{\n  feel_like_temperature     = id(feelLiketemperature).state;
+  //     \ \n  forecast_temperature      = id(forecasttemperature).state; \n  current_temperature
+  //     \       = id(currenttemperature).state;\n  wether_condition          = id(wethercondition).state;
+  //     \ \n  forecast_wether_condition = id(forecastwethercondition).state;\n  j=1;\n}\n
+  //     \nif(id(kitchensoket).state)\n{ id(LedKitchenSoket).turn_on(); }\nelse { id(LedKitchenSoket).turn_off();
+  //     \ }\n switch frame\n\n       next frame\nif ( \n         id(next_frame).state
+  //     \ \n    and next_frame_button_released   \n   ) \n{\n  it.printf(0, \"        \"
+  //     \ );\n  i = i + (fraimtime - i%fraimtime) ;\n   skip first 3 fraims becaues it
+  //     \ shows same data\n  if ( i < 3 * fraimtime ) { i = 3 * fraimtime; }\n  next_frame_button_released
+  //     \ = false;\n}\nelse if(!id(next_frame).state) {next_frame_button_released = true;}\n
+  //     \       previus frame\nif ( \n        id(previus_frame).state \n    and i > 0
+  //     \ \n    and prev_frame_button_released \n   ) \n{ \n  it.printf(0, \"        \"
+  //     \ );\n   skip first 3 fraims becaues it shows same data\n  if (i < 3 * fraimtime)
+  //     \ \n  { i = 7 * fraimtime; }  last frame \n  else if \n  (\n        i > 3 * fraimtime
+  //     \ \n    and i < 4 * fraimtime\n  ) \n  { i=0; }\n  else { i = i - (fraimtime + i%fraimtime)
+  //     \ ; }\n  prev_frame_button_released = false;\n}\nelse if(!id(previus_frame).state)
+  //     \ {prev_frame_button_released = true;}\n\n\n dtostrf(i, 8, 2, str);\n ESP_LOGI(\"
+  //     main\", str );\n\n GAS leds\nif (id(gasdetectedbinary).state and (i%20<10)) {
+  //     \ id(gasdetectedled).turn_on(); } \nelse { id(gasdetectedled).turn_off(); }\n\n
+  //      set timer adjustment\nif (id(set_timer_adjustment).state) {id(glogal_timer_adjustment)
   //     \ = 0;}\nif (id(glogal_timer_adjustment) != 0 and i%10 == 0) {id(glogal_timer_adjustment)--;}
   //     \ \n\n synch with HA indicator\nif (i%150==0 ) \n{ \n    if ( id(synchwithhaled).state
   //     \ ) { exist_conntction_to_ha = true; }\n    else { exist_conntction_to_ha = false;
@@ -991,7 +992,8 @@ void setup() {
   //     \  ); }\n      else if (wether_condition == \"windy\" )        {it.printf(4, \"
   //     blo\"  ); }\n      else if (wether_condition == \"clear-night\" )  {it.printf(4,
   //     \ \"clrn\" ); }\n      else if (wether_condition == \"unLo\" )         {it.printf(4,
-  //     \ \"unLo\" ); }\n      else {it.printf(4, \"unno\"  ); } \n    }\n    else if (i
+  //     \ \"unLo\" ); }\n      else if (wether_condition == \"pouring\" )      {it.printf(4,
+  //     \ \"Hrai\" ); }\n      else {it.printf(4, \"unno\"  ); } \n    }\n    else if (i
   //     \ == 3 * fraimtime)\n    {\n       feel like temp at first screen\n      it.printf(0,
   //     \ \"        \" );  clean screen\n      it.printf(0, \"%.f\", feel_like_temperature);
   //     \ \n       it.printf(3, \"C\");\n\n      it.printf(4, \"%.f\", current_temperature);
@@ -1008,6 +1010,7 @@ void setup() {
   //     \  ); }\n      else if (wether_condition == \"windy\" )       {it.printf(0, \"blo\"
   //     \  ); }\n      else if (wether_condition == \"clear-night\" ) {it.printf(0, \"clrn\"
   //     \ ); }\n      else if (wether_condition == \"unLo\" )        {it.printf(0, \"unLo\"
+  //     \ ); }\n      else if (wether_condition == \"pouring\" )     {it.printf(0, \"Hrai\"
   //     \ ); }\n      else {it.printf(0, \"unno\"  ); } \n\n       second screen\n   
   //     \   if      (forecast_wether_condition == \"rainy\" )       {it.printf(4, \"rAin\"
   //     \ ); }\n      else if (forecast_wether_condition == \"cloudy\")       {it.printf(4,
@@ -1018,7 +1021,8 @@ void setup() {
   //     \ \"sun\"  ); }\n      else if (forecast_wether_condition == \"windy\" )       {it.printf(4,
   //     \ \"blo\"  ); }\n      else if (forecast_wether_condition == \"clear-night\" ) {it.printf(4,
   //     \ \"clrn\" ); }\n      else if (forecast_wether_condition == \"unLo\" )        {it.printf(4,
-  //     \ \"unLo\" ); }\n      else {it.printf(4, \"unno\"  ); } \n\n    }\n    else if
+  //     \ \"unLo\" ); }\n      else if (forecast_wether_condition == \"pouring\" )     {it.printf(4,
+  //     \ \"Hrai\" ); }\n      else {it.printf(4, \"unno\"  ); } \n\n    }\n    else if
   //     \ (i == 6 * fraimtime)\n    {\n      it.printf(0, \"        \" );  clean screen\n
   //     \      it.printf(0, \"t %.f\", id(internal_temperature).state); \n      it.printf(4,
   //     \ \"h %.f\", id(internal_humidity).state); \n    }\n    else if (i == 7 * fraimtime)\n
@@ -1114,7 +1118,7 @@ void setup() {
       static bool next_frame_button_released = false;
       static bool prev_frame_button_released = false;
       static bool exist_conntction_to_ha = false;
-      static bool iniialLoaded = false;
+      static bool connectionToHAEstablished = false;
       
       static float feel_like_temperature = -42;  
       static float forecast_temperature = -42;  
@@ -1128,10 +1132,10 @@ void setup() {
       if ( i>15000 ){ i=0; }  
       if ( j>15000 ){ j=0; }  
       
-      if (iniialLoaded == false and j % 50 == 0)
+      if (connectionToHAEstablished == false and j % 50 == 0)
       {
           if( synchwithhaled->state)
-          { iniialLoaded = true; j = 2900; } 
+          { connectionToHAEstablished = true; j = 2950; } 
       }
       
        
@@ -1258,6 +1262,7 @@ void setup() {
             else if (wether_condition == "windy" )        {it.printf(4, "blo"  ); }
             else if (wether_condition == "clear-night" )  {it.printf(4, "clrn" ); }
             else if (wether_condition == "unLo" )         {it.printf(4, "unLo" ); }
+            else if (wether_condition == "pouring" )      {it.printf(4, "Hrai" ); }
             else {it.printf(4, "unno"  ); } 
           }
           else if (i == 3 * fraimtime)
@@ -1289,6 +1294,7 @@ void setup() {
             else if (wether_condition == "windy" )       {it.printf(0, "blo"  ); }
             else if (wether_condition == "clear-night" ) {it.printf(0, "clrn" ); }
             else if (wether_condition == "unLo" )        {it.printf(0, "unLo" ); }
+            else if (wether_condition == "pouring" )     {it.printf(0, "Hrai" ); }
             else {it.printf(0, "unno"  ); } 
       
              
@@ -1301,6 +1307,7 @@ void setup() {
             else if (forecast_wether_condition == "windy" )       {it.printf(4, "blo"  ); }
             else if (forecast_wether_condition == "clear-night" ) {it.printf(4, "clrn" ); }
             else if (forecast_wether_condition == "unLo" )        {it.printf(4, "unLo" ); }
+            else if (forecast_wether_condition == "pouring" )     {it.printf(4, "Hrai" ); }
             else {it.printf(4, "unno"  ); } 
       
           }

@@ -286,7 +286,7 @@ display:
     static bool next_frame_button_released = false;
     static bool prev_frame_button_released = false;
     static bool exist_conntction_to_ha = false;
-    static bool iniialLoaded = false;
+    static bool connectionToHAEstablished = false;
 
     static float feel_like_temperature = -42; //id(feelLiketemperature).state;
     static float forecast_temperature = -42; //id(forecasttemperature).state;
@@ -300,10 +300,10 @@ display:
     if ( i>15000 ){ i=0; }  
     if ( j>15000 ){ j=0; }  
 
-    if (iniialLoaded == false and j % 50 == 0)
+    if (connectionToHAEstablished == false and j % 50 == 0)
     {
         if( id(synchwithhaled).state)
-        { iniialLoaded = true; j = 2950; } 
+        { connectionToHAEstablished = true; j = 2950; } 
     }
 
     // Get data form HA
@@ -430,6 +430,7 @@ display:
           else if (wether_condition == "windy" )        {it.printf(4, "blo"  ); }
           else if (wether_condition == "clear-night" )  {it.printf(4, "clrn" ); }
           else if (wether_condition == "unLo" )         {it.printf(4, "unLo" ); }
+          else if (wether_condition == "pouring" )      {it.printf(4, "Hrai" ); }
           else {it.printf(4, "unno"  ); } 
         }
         else if (i == 3 * fraimtime)
@@ -461,6 +462,7 @@ display:
           else if (wether_condition == "windy" )       {it.printf(0, "blo"  ); }
           else if (wether_condition == "clear-night" ) {it.printf(0, "clrn" ); }
           else if (wether_condition == "unLo" )        {it.printf(0, "unLo" ); }
+          else if (wether_condition == "pouring" )     {it.printf(0, "Hrai" ); }
           else {it.printf(0, "unno"  ); } 
 
           // second screen
@@ -473,6 +475,7 @@ display:
           else if (forecast_wether_condition == "windy" )       {it.printf(4, "blo"  ); }
           else if (forecast_wether_condition == "clear-night" ) {it.printf(4, "clrn" ); }
           else if (forecast_wether_condition == "unLo" )        {it.printf(4, "unLo" ); }
+          else if (forecast_wether_condition == "pouring" )     {it.printf(4, "Hrai" ); }
           else {it.printf(4, "unno"  ); } 
 
         }
