@@ -93,14 +93,14 @@ binary_sensor:
     name: "Toggle kitchen soket"
     id: turnonkitchensoket
     key: 7       
-    on_click:
-    - min_length: 50ms
-      max_length: 350ms
-      then:
-        - homeassistant.service:
-            service: switch.toggle
-            data:
-              entity_id: "switch.soket_switch" 
+    # on_click:
+    # - min_length: 50ms
+    #   max_length: 350ms
+    #   then:
+    #     - homeassistant.service:
+    #         service: switch.toggle
+    #         data:
+    #           entity_id: "switch.soket_switch" 
   - platform: homeassistant 
     name: "Kitchen Soket"
     id: "kitchensoket"
