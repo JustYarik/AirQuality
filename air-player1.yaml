@@ -302,7 +302,7 @@ display:
    
     countdowntime = id(global_timer_seconds); 
     // countdown LEDs
-    if(  countdowntime >0 and initConuntdownValue > 0 and j % 10 == 0)
+    if(  countdowntime > 0 and initConuntdownValue > 0 and j % 2 == 0)
     {
       // char str[32];
       // dtostrf(countdowntime/initConuntdownValue, 8, 2, str);
@@ -312,14 +312,21 @@ display:
         id(Led0).turn_on(); id(LedKitchenSoket).turn_on(); id(Led2).turn_on(); id(Led3).turn_on();
         id(Led4).turn_on(); id(Led5).turn_on();            id(Led6).turn_on(); id(Led7).turn_on();
       }
-      else if(8 * countdowntime > 7 * initConuntdownValue) { id(Led7).turn_off();  }
-      else if(8 * countdowntime > 6 * initConuntdownValue) { id(Led6).turn_off(); }
-      else if(8 * countdowntime > 5 * initConuntdownValue) { id(Led5).turn_off(); }
-      else if(8 * countdowntime > 4 * initConuntdownValue) { id(Led4).turn_off(); }
-      else if(8 * countdowntime > 3 * initConuntdownValue) { id(Led3).turn_off(); }
-      else if(8 * countdowntime > 2 * initConuntdownValue) { id(Led2).turn_off(); }
-      else if(8 * countdowntime > 1 * initConuntdownValue) { id(LedKitchenSoket).turn_off(); }
-      else if(8 * countdowntime > 0 * initConuntdownValue) { id(Led0).turn_off(); }
+      // else if(8 * countdowntime > 7 * initConuntdownValue) { id(Led7).turn_off();  }
+      else if( 8 * countdowntime > 6 * initConuntdownValue and 8 * countdowntime < 7 * initConuntdownValue ) 
+            { id(Led7).turn_off(); }
+      else if( 8 * countdowntime > 5 * initConuntdownValue and 8 * countdowntime < 6 * initConuntdownValue )
+            { id(Led6).turn_off(); }
+      else if( 8 * countdowntime > 4 * initConuntdownValue and 8 * countdowntime < 5 * initConuntdownValue )
+            { id(Led5).turn_off(); }
+      else if( 8 * countdowntime > 3 * initConuntdownValue and 8 * countdowntime < 4 * initConuntdownValue) 
+            { id(Led4).turn_off(); }
+      else if( 8 * countdowntime > 2 * initConuntdownValue and 8 * countdowntime < 3 * initConuntdownValue)
+            { id(Led3).turn_off(); }
+      else if( 8 * countdowntime > 1 * initConuntdownValue and 8 * countdowntime < 2 * initConuntdownValue)
+            { id(Led2).turn_off(); }
+      else if( 8 * countdowntime > 0 * initConuntdownValue and 8 * countdowntime < 1 * initConuntdownValue)
+            { id(LedKitchenSoket).turn_off(); }
     }
 
 

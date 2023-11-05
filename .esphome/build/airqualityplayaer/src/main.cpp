@@ -438,8 +438,8 @@ void setup() {
   //       open_drain: false
   //       pulldown: false
   //     inverted: true
-  //     id: esp32_esp32internalgpiopin
   //     drive_strength: 20.0
+  //     id: esp32_esp32internalgpiopin
   //   disabled_by_default: false
   gasdetectedbinary = new gpio::GPIOBinarySensor();
   App.register_binary_sensor(gasdetectedbinary);
@@ -467,8 +467,8 @@ void setup() {
   //       open_drain: false
   //       pulldown: false
   //     inverted: true
-  //     id: esp32_esp32internalgpiopin_2
   //     drive_strength: 20.0
+  //     id: esp32_esp32internalgpiopin_2
   //   disabled_by_default: false
   set_timer_adjustment = new gpio::GPIOBinarySensor();
   App.register_binary_sensor(set_timer_adjustment);
@@ -797,9 +797,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     id: esp32_esp32internalgpiopin_3
-  //     inverted: false
   //     drive_strength: 20.0
+  //     inverted: false
+  //     id: esp32_esp32internalgpiopin_3
   //   pin_b:
   //     number: 14
   //     mode:
@@ -808,9 +808,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     id: esp32_esp32internalgpiopin_4
-  //     inverted: false
   //     drive_strength: 20.0
+  //     inverted: false
+  //     id: esp32_esp32internalgpiopin_4
   //   resolution: 2
   //   on_clockwise:
   //   - then:
@@ -908,9 +908,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     id: esp32_esp32internalgpiopin_5
-  //     inverted: false
   //     drive_strength: 20.0
+  //     inverted: false
+  //     id: esp32_esp32internalgpiopin_5
   //   clk_pin:
   //     number: 22
   //     mode:
@@ -919,9 +919,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     id: esp32_esp32internalgpiopin_6
-  //     inverted: false
   //     drive_strength: 20.0
+  //     inverted: false
+  //     id: esp32_esp32internalgpiopin_6
   //   dio_pin:
   //     number: 23
   //     mode:
@@ -930,9 +930,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     id: esp32_esp32internalgpiopin_7
-  //     inverted: false
   //     drive_strength: 20.0
+  //     inverted: false
+  //     id: esp32_esp32internalgpiopin_7
   //   intensity: 5
   //   update_interval: 100ms
   //   lambda: !lambda " char str[32];\n dtostrf(i, 8, 2, str);\n ESP_LOGI(\"main\"
@@ -948,26 +948,31 @@ void setup() {
   //     static std::string wether_condition = \"unLo\"; id(wethercondition).state;\nstatic
   //     \ std::string forecast_wether_condition = \"unLo\"; id(forecastwethercondition).state;\n
   //     \ \n\n\ncountdowntime = id(global_timer_seconds); \n countdown LEDs\nif(  countdowntime
-  //     \ >0 and initConuntdownValue > 0 and j % 10 == 0)\n{\n   char str[32];\n   dtostrf(countdowntime/initConuntdownValue,
+  //     \ >0 and initConuntdownValue > 0 and j % 2 == 0)\n{\n   char str[32];\n   dtostrf(countdowntime/initConuntdownValue,
   //     \ 8, 2, str);\n   ESP_LOGI(\"main\", str );\n  if (8 * countdowntime == 8 * initConuntdownValue)\n
   //     \  {\n    id(Led0).turn_on(); id(LedKitchenSoket).turn_on(); id(Led2).turn_on();
   //     \ id(Led3).turn_on();\n    id(Led4).turn_on(); id(Led5).turn_on();            id(Led6).turn_on();
-  //     \ id(Led7).turn_on();\n  }\n  else if(8 * countdowntime > 7 * initConuntdownValue)
-  //     \ { id(Led7).turn_off();  }\n  else if(8 * countdowntime > 6 * initConuntdownValue)
-  //     \ { id(Led6).turn_off(); }\n  else if(8 * countdowntime > 5 * initConuntdownValue)
-  //     \ { id(Led5).turn_off(); }\n  else if(8 * countdowntime > 4 * initConuntdownValue)
-  //     \ { id(Led4).turn_off(); }\n  else if(8 * countdowntime > 3 * initConuntdownValue)
-  //     \ { id(Led3).turn_off(); }\n  else if(8 * countdowntime > 2 * initConuntdownValue)
-  //     \ { id(Led2).turn_off(); }\n  else if(8 * countdowntime > 1 * initConuntdownValue)
-  //     \ { id(LedKitchenSoket).turn_off(); }\n  else if(8 * countdowntime > 0 * initConuntdownValue)
-  //     \ { id(Led0).turn_off(); }\n}\n\n\nif ( i>15000 ){ i=0; }  \nif ( j>15000 ){ j=0;
-  //     \ }  \n\nif (connectionToHAEstablished == false and j % 50 == 0)\n{\n    if( id(synchwithhaled).state)\n
-  //     \    { connectionToHAEstablished = true; j = 2950; } \n}\n\n Get data form HA\n
-  //     j++;\nif ( j % 3000 == 0 )  get data from HA every 5 mins\n{\n  feel_like_temperature
-  //     \     = id(feelLiketemperature).state; \n  forecast_temperature      = id(forecasttemperature).state;
-  //     \ \n  current_temperature       = id(currenttemperature).state;\n  wether_condition
-  //     \          = id(wethercondition).state; \n  forecast_wether_condition = id(forecastwethercondition).state;\n
-  //     \  j=1;\n}\n\nif (countdowntime == 0)\n{\n  if(id(kitchensoket).state) { id(LedKitchenSoket).turn_on();
+  //     \ id(Led7).turn_on();\n  }\n   else if(8 * countdowntime > 7 * initConuntdownValue)
+  //     \ { id(Led7).turn_off();  }\n  else if( 8 * countdowntime > 6 * initConuntdownValue
+  //     \ and 8 * countdowntime < 7 * initConuntdownValue ) \n        { id(Led7).turn_off();
+  //     \ }\n  else if( 8 * countdowntime > 5 * initConuntdownValue and 8 * countdowntime
+  //     \ < 6 * initConuntdownValue )\n        { id(Led6).turn_off(); }\n  else if( 8 *
+  //     \ countdowntime > 4 * initConuntdownValue and 8 * countdowntime < 5 * initConuntdownValue
+  //     \ )\n        { id(Led5).turn_off(); }\n  else if( 8 * countdowntime > 3 * initConuntdownValue
+  //     \ and 8 * countdowntime < 4 * initConuntdownValue) \n        { id(Led4).turn_off();
+  //     \ }\n  else if( 8 * countdowntime > 2 * initConuntdownValue and 8 * countdowntime
+  //     \ < 3 * initConuntdownValue)\n        { id(Led3).turn_off(); }\n  else if( 8 * countdowntime
+  //     \ > 1 * initConuntdownValue and 8 * countdowntime < 2 * initConuntdownValue)\n 
+  //     \       { id(Led2).turn_off(); }\n  else if( 8 * countdowntime > 0 * initConuntdownValue
+  //     \ and 8 * countdowntime < 1 * initConuntdownValue)\n        { id(LedKitchenSoket).turn_off();
+  //     \ }\n}\n\n\nif ( i>15000 ){ i=0; }  \nif ( j>15000 ){ j=0; }  \n\nif (connectionToHAEstablished
+  //     \ == false and j % 50 == 0)\n{\n    if( id(synchwithhaled).state)\n    { connectionToHAEstablished
+  //     \ = true; j = 2950; } \n}\n\n Get data form HA\nj++;\nif ( j % 3000 == 0 ) 
+  //     \ get data from HA every 5 mins\n{\n  feel_like_temperature     = id(feelLiketemperature).state;
+  //     \ \n  forecast_temperature      = id(forecasttemperature).state; \n  current_temperature
+  //     \       = id(currenttemperature).state;\n  wether_condition          = id(wethercondition).state;
+  //     \ \n  forecast_wether_condition = id(forecastwethercondition).state;\n  j=1;\n}\n
+  //     \nif (countdowntime == 0)\n{\n  if(id(kitchensoket).state) { id(LedKitchenSoket).turn_on();
   //     \ }\n  else { id(LedKitchenSoket).turn_off(); }\n  \n  id(Led0).turn_off(); id(Led2).turn_off();
   //     \ id(Led3).turn_off(); id(Led4).turn_off();\n  id(Led5).turn_off(); id(Led7).turn_off();
   //     \ \n}\n\n switch frame\n\n       next frame\nif ( \n         id(next_frame).state
@@ -1158,7 +1163,7 @@ void setup() {
       
       countdowntime = global_timer_seconds->value(); 
        
-      if(  countdowntime >0 and initConuntdownValue > 0 and j % 10 == 0)
+      if(  countdowntime >0 and initConuntdownValue > 0 and j % 2 == 0)
       {
          
          
@@ -1168,14 +1173,21 @@ void setup() {
           Led0->turn_on(); LedKitchenSoket->turn_on(); Led2->turn_on(); Led3->turn_on();
           Led4->turn_on(); Led5->turn_on();            Led6->turn_on(); Led7->turn_on();
         }
-        else if(8 * countdowntime > 7 * initConuntdownValue) { Led7->turn_off();  }
-        else if(8 * countdowntime > 6 * initConuntdownValue) { Led6->turn_off(); }
-        else if(8 * countdowntime > 5 * initConuntdownValue) { Led5->turn_off(); }
-        else if(8 * countdowntime > 4 * initConuntdownValue) { Led4->turn_off(); }
-        else if(8 * countdowntime > 3 * initConuntdownValue) { Led3->turn_off(); }
-        else if(8 * countdowntime > 2 * initConuntdownValue) { Led2->turn_off(); }
-        else if(8 * countdowntime > 1 * initConuntdownValue) { LedKitchenSoket->turn_off(); }
-        else if(8 * countdowntime > 0 * initConuntdownValue) { Led0->turn_off(); }
+         
+        else if( 8 * countdowntime > 6 * initConuntdownValue and 8 * countdowntime < 7 * initConuntdownValue ) 
+              { Led7->turn_off(); }
+        else if( 8 * countdowntime > 5 * initConuntdownValue and 8 * countdowntime < 6 * initConuntdownValue )
+              { Led6->turn_off(); }
+        else if( 8 * countdowntime > 4 * initConuntdownValue and 8 * countdowntime < 5 * initConuntdownValue )
+              { Led5->turn_off(); }
+        else if( 8 * countdowntime > 3 * initConuntdownValue and 8 * countdowntime < 4 * initConuntdownValue) 
+              { Led4->turn_off(); }
+        else if( 8 * countdowntime > 2 * initConuntdownValue and 8 * countdowntime < 3 * initConuntdownValue)
+              { Led3->turn_off(); }
+        else if( 8 * countdowntime > 1 * initConuntdownValue and 8 * countdowntime < 2 * initConuntdownValue)
+              { Led2->turn_off(); }
+        else if( 8 * countdowntime > 0 * initConuntdownValue and 8 * countdowntime < 1 * initConuntdownValue)
+              { LedKitchenSoket->turn_off(); }
       }
       
       
