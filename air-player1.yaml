@@ -133,11 +133,14 @@ binary_sensor:
 
 output:
   - platform: tm1638
-    id: gasdetectedled
+    id: Led0
     led: 0
   - platform: tm1638
     id: LedKitchenSoket 
     led: 1
+  - platform: tm1638
+    id: Led2
+    led: 2
   - platform: tm1638
     id: Led3
     led: 3
@@ -273,7 +276,7 @@ display:
   intensity: 5
   update_interval: 100ms
   lambda: |-
-    char str[32];
+    // char str[32];
     // dtostrf(i, 8, 2, str);
     // ESP_LOGI("main", str );
 
@@ -282,6 +285,7 @@ display:
     static int j = 1500;
     static int countdowntime = 0;
     static int fraimtime = 40; // in terms of display update_interval-s  (4 sec)
+    static int initConuntdownValue = 0; // in terms of display update_interval-s  (4 sec)
     static bool gas_alart = false;
     static bool next_frame_button_released = false;
     static bool prev_frame_button_released = false;
@@ -297,6 +301,28 @@ display:
     
    
     countdowntime = id(global_timer_seconds); 
+    // countdown LEDs
+    if(  countdowntime >0 and initConuntdownValue > 0 and j % 10 == 0)
+    {
+      // char str[32];
+      // dtostrf(countdowntime/initConuntdownValue, 8, 2, str);
+      // ESP_LOGI("main", str );
+      if (8 * countdowntime == 8 * initConuntdownValue)
+      {
+        id(Led0).turn_on(); id(LedKitchenSoket).turn_on(); id(Led2).turn_on(); id(Led3).turn_on();
+        id(Led4).turn_on(); id(Led5).turn_on();            id(Led6).turn_on(); id(Led7).turn_on();
+      }
+      else if(8 * countdowntime > 7 * initConuntdownValue) { id(Led7).turn_off();  }
+      else if(8 * countdowntime > 6 * initConuntdownValue) { id(Led6).turn_off(); }
+      else if(8 * countdowntime > 5 * initConuntdownValue) { id(Led5).turn_off(); }
+      else if(8 * countdowntime > 4 * initConuntdownValue) { id(Led4).turn_off(); }
+      else if(8 * countdowntime > 3 * initConuntdownValue) { id(Led3).turn_off(); }
+      else if(8 * countdowntime > 2 * initConuntdownValue) { id(Led2).turn_off(); }
+      else if(8 * countdowntime > 1 * initConuntdownValue) { id(LedKitchenSoket).turn_off(); }
+      else if(8 * countdowntime > 0 * initConuntdownValue) { id(Led0).turn_off(); }
+    }
+
+
     if ( i>15000 ){ i=0; }  
     if ( j>15000 ){ j=0; }  
 
@@ -318,9 +344,11 @@ display:
       j=1;
     }
 
-    if(id(kitchensoket).state)
-    { id(LedKitchenSoket).turn_on(); }
-    else { id(LedKitchenSoket).turn_off(); }
+    if (countdowntime == 0)
+    {
+      if(id(kitchensoket).state) { id(LedKitchenSoket).turn_on(); }
+      else { id(LedKitchenSoket).turn_off(); }
+    }
     // switch frame
 
           // next frame
@@ -363,21 +391,24 @@ display:
     // ESP_LOGI("main", str );
 
     // GAS leds
-    if (id(gasdetectedbinary).state and (i%20<10)) { id(gasdetectedled).turn_on(); } 
-    else { id(gasdetectedled).turn_off(); }
+    // if (id(gasdetectedbinary).state and (i%20<10)) { id(gasdetectedled).turn_on(); } 
+    // else { id(gasdetectedled).turn_off(); }
 
     // set timer adjustment
     if (id(set_timer_adjustment).state) {id(glogal_timer_adjustment) = 0;}
     if (id(glogal_timer_adjustment) != 0 and i%10 == 0) {id(glogal_timer_adjustment)--;} 
 
     // synch with HA indicator
-    if (i%150==0 ) 
-    { 
-        if ( id(synchwithhaled).state ) { exist_conntction_to_ha = true; }
-        else { exist_conntction_to_ha = false; }
+    if (countdowntime == 0)
+    {
+      if (i%150==0 ) 
+      { 
+          if ( id(synchwithhaled).state ) { exist_conntction_to_ha = true; }
+          else { exist_conntction_to_ha = false; }
+      }
+      if (exist_conntction_to_ha == true and i%50 == 0) { id(Led6).turn_on(); }
+      else { id(Led6).turn_off(); }
     }
-    if (exist_conntction_to_ha == true and i%50 == 0) { id(Led6).turn_on(); }
-    else { id(Led6).turn_off(); }
     
     // GAS alarm
     if (id(gasdetectedbinary).state) {gas_alart = true;}
@@ -406,7 +437,10 @@ display:
           or id(timer15minutes).state  
           or id(glogal_timer_adjustment) != 0
          )
-      { id(global_init_timer_seconds) = countdowntime ; }
+      { 
+        id(global_init_timer_seconds) = countdowntime ; 
+        initConuntdownValue = countdowntime ;
+      }
 
       // WEATHER
       if (countdowntime == 0  )

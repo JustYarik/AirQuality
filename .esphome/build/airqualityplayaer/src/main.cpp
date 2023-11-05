@@ -42,8 +42,9 @@ gpio::GPIOBinarySensor *set_timer_adjustment;
 esp32::ESP32InternalGPIOPin *esp32_esp32internalgpiopin_2;
 template_::TemplateBinarySensor *timer_is_active;
 using namespace output;
-tm1638::TM1638OutputLed *gasdetectedled;
+tm1638::TM1638OutputLed *Led0;
 tm1638::TM1638OutputLed *LedKitchenSoket;
+tm1638::TM1638OutputLed *Led2;
 tm1638::TM1638OutputLed *Led3;
 tm1638::TM1638OutputLed *Led4;
 tm1638::TM1638OutputLed *Led5;
@@ -500,13 +501,13 @@ void setup() {
   // output:
   // output.tm1638:
   //   platform: tm1638
-  //   id: gasdetectedled
+  //   id: Led0
   //   led: 0
   //   tm1638_id: tm1638_display
-  gasdetectedled = new tm1638::TM1638OutputLed();
-  gasdetectedled->set_component_source("tm1638.output");
-  App.register_component(gasdetectedled);
-  gasdetectedled->set_lednum(0);
+  Led0 = new tm1638::TM1638OutputLed();
+  Led0->set_component_source("tm1638.output");
+  App.register_component(Led0);
+  Led0->set_lednum(0);
   // output.tm1638:
   //   platform: tm1638
   //   id: LedKitchenSoket
@@ -516,6 +517,15 @@ void setup() {
   LedKitchenSoket->set_component_source("tm1638.output");
   App.register_component(LedKitchenSoket);
   LedKitchenSoket->set_lednum(1);
+  // output.tm1638:
+  //   platform: tm1638
+  //   id: Led2
+  //   led: 2
+  //   tm1638_id: tm1638_display
+  Led2 = new tm1638::TM1638OutputLed();
+  Led2->set_component_source("tm1638.output");
+  App.register_component(Led2);
+  Led2->set_lednum(2);
   // output.tm1638:
   //   platform: tm1638
   //   id: Led3
@@ -787,9 +797,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
+  //     inverted: false
   //     id: esp32_esp32internalgpiopin_3
   //     drive_strength: 20.0
-  //     inverted: false
   //   pin_b:
   //     number: 14
   //     mode:
@@ -798,9 +808,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
+  //     inverted: false
   //     id: esp32_esp32internalgpiopin_4
   //     drive_strength: 20.0
-  //     inverted: false
   //   resolution: 2
   //   on_clockwise:
   //   - then:
@@ -898,9 +908,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
+  //     inverted: false
   //     id: esp32_esp32internalgpiopin_5
   //     drive_strength: 20.0
-  //     inverted: false
   //   clk_pin:
   //     number: 22
   //     mode:
@@ -909,9 +919,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
+  //     inverted: false
   //     id: esp32_esp32internalgpiopin_6
   //     drive_strength: 20.0
-  //     inverted: false
   //   dio_pin:
   //     number: 23
   //     mode:
@@ -920,56 +930,70 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
+  //     inverted: false
   //     id: esp32_esp32internalgpiopin_7
   //     drive_strength: 20.0
-  //     inverted: false
   //   intensity: 5
   //   update_interval: 100ms
-  //   lambda: !lambda "char str[32];\n dtostrf(i, 8, 2, str);\n ESP_LOGI(\"main\", str
-  //     \ );\n\n static int catchedi = 20;  16 =fraimtime(4)*numbers of fraims(4)  \n
-  //     static int i = 0;\nstatic int j = 1500;\nstatic int countdowntime = 0;\nstatic int
-  //     \ fraimtime = 40;  in terms of display update_interval-s  (4 sec)\nstatic bool
-  //     \ gas_alart = false;\nstatic bool next_frame_button_released = false;\nstatic bool
-  //     \ prev_frame_button_released = false;\nstatic bool exist_conntction_to_ha = false;\n
-  //     static bool connectionToHAEstablished = false;\n\nstatic float feel_like_temperature
+  //   lambda: !lambda " char str[32];\n dtostrf(i, 8, 2, str);\n ESP_LOGI(\"main\"
+  //     , str );\n\n static int catchedi = 20;  16 =fraimtime(4)*numbers of fraims(4)
+  //     \  \nstatic int i = 0;\nstatic int j = 1500;\nstatic int countdowntime = 0;\nstatic
+  //     \ int fraimtime = 40;  in terms of display update_interval-s  (4 sec)\nstatic
+  //     \ int initConuntdownValue = 0;  in terms of display update_interval-s  (4 sec)\n
+  //     static bool gas_alart = false;\nstatic bool next_frame_button_released = false;\n
+  //     static bool prev_frame_button_released = false;\nstatic bool exist_conntction_to_ha
+  //     \ = false;\nstatic bool connectionToHAEstablished = false;\n\nstatic float feel_like_temperature
   //     \ = -42; id(feelLiketemperature).state;\nstatic float forecast_temperature = -42;
   //     \ id(forecasttemperature).state;\nstatic float current_temperature = -42; id(currenttemperature).state;\n
   //     static std::string wether_condition = \"unLo\"; id(wethercondition).state;\nstatic
   //     \ std::string forecast_wether_condition = \"unLo\"; id(forecastwethercondition).state;\n
-  //     \ \n\n\ncountdowntime = id(global_timer_seconds); \nif ( i>15000 ){ i=0; }  \nif
-  //     \ ( j>15000 ){ j=0; }  \n\nif (connectionToHAEstablished == false and j % 50 ==
-  //     \ 0)\n{\n    if( id(synchwithhaled).state)\n    { connectionToHAEstablished = true;
-  //     \ j = 2950; } \n}\n\n Get data form HA\nj++;\nif ( j % 3000 == 0 )  get data
-  //     \ from HA every 5 mins\n{\n  feel_like_temperature     = id(feelLiketemperature).state;
-  //     \ \n  forecast_temperature      = id(forecasttemperature).state; \n  current_temperature
-  //     \       = id(currenttemperature).state;\n  wether_condition          = id(wethercondition).state;
-  //     \ \n  forecast_wether_condition = id(forecastwethercondition).state;\n  j=1;\n}\n
-  //     \nif(id(kitchensoket).state)\n{ id(LedKitchenSoket).turn_on(); }\nelse { id(LedKitchenSoket).turn_off();
-  //     \ }\n switch frame\n\n       next frame\nif ( \n         id(next_frame).state
-  //     \ \n    and next_frame_button_released   \n   ) \n{\n  it.printf(0, \"        \"
-  //     \ );\n  i = i + (fraimtime - i%fraimtime) ;\n   skip first 3 fraims becaues it
-  //     \ shows same data\n  if ( i < 3 * fraimtime ) { i = 3 * fraimtime; }\n  next_frame_button_released
-  //     \ = false;\n}\nelse if(!id(next_frame).state) {next_frame_button_released = true;}\n
-  //     \       previus frame\nif ( \n        id(previus_frame).state \n    and i > 0
-  //     \ \n    and prev_frame_button_released \n   ) \n{ \n  it.printf(0, \"        \"
-  //     \ );\n   skip first 3 fraims becaues it shows same data\n  if (i < 3 * fraimtime)
-  //     \ \n  { i = 7 * fraimtime; }  last frame \n  else if \n  (\n        i > 3 * fraimtime
-  //     \ \n    and i < 4 * fraimtime\n  ) \n  { i=0; }\n  else { i = i - (fraimtime + i%fraimtime)
-  //     \ ; }\n  prev_frame_button_released = false;\n}\nelse if(!id(previus_frame).state)
-  //     \ {prev_frame_button_released = true;}\n\n\n dtostrf(i, 8, 2, str);\n ESP_LOGI(\"
-  //     main\", str );\n\n GAS leds\nif (id(gasdetectedbinary).state and (i%20<10)) {
-  //     \ id(gasdetectedled).turn_on(); } \nelse { id(gasdetectedled).turn_off(); }\n\n
-  //      set timer adjustment\nif (id(set_timer_adjustment).state) {id(glogal_timer_adjustment)
+  //     \ \n\n\ncountdowntime = id(global_timer_seconds); \n countdown LEDs\nif(  countdowntime
+  //     \ >0 and initConuntdownValue > 0 and j % 10 == 0)\n{\n   char str[32];\n   dtostrf(countdowntime/initConuntdownValue,
+  //     \ 8, 2, str);\n   ESP_LOGI(\"main\", str );\n  if (8 * countdowntime == 8 * initConuntdownValue)\n
+  //     \  {\n    id(Led0).turn_on(); id(LedKitchenSoket).turn_on(); id(Led2).turn_on();
+  //     \ id(Led3).turn_on();\n    id(Led4).turn_on(); id(Led5).turn_on();            id(Led6).turn_on();
+  //     \ id(Led7).turn_on();\n  }\n  else if(8 * countdowntime > 7 * initConuntdownValue)
+  //     \ { id(Led7).turn_off();  }\n  else if(8 * countdowntime > 6 * initConuntdownValue)
+  //     \ { id(Led6).turn_off(); }\n  else if(8 * countdowntime > 5 * initConuntdownValue)
+  //     \ { id(Led5).turn_off(); }\n  else if(8 * countdowntime > 4 * initConuntdownValue)
+  //     \ { id(Led4).turn_off(); }\n  else if(8 * countdowntime > 3 * initConuntdownValue)
+  //     \ { id(Led3).turn_off(); }\n  else if(8 * countdowntime > 2 * initConuntdownValue)
+  //     \ { id(Led2).turn_off(); }\n  else if(8 * countdowntime > 1 * initConuntdownValue)
+  //     \ { id(LedKitchenSoket).turn_off(); }\n  else if(8 * countdowntime > 0 * initConuntdownValue)
+  //     \ { id(Led0).turn_off(); }\n}\n\n\nif ( i>15000 ){ i=0; }  \nif ( j>15000 ){ j=0;
+  //     \ }  \n\nif (connectionToHAEstablished == false and j % 50 == 0)\n{\n    if( id(synchwithhaled).state)\n
+  //     \    { connectionToHAEstablished = true; j = 2950; } \n}\n\n Get data form HA\n
+  //     j++;\nif ( j % 3000 == 0 )  get data from HA every 5 mins\n{\n  feel_like_temperature
+  //     \     = id(feelLiketemperature).state; \n  forecast_temperature      = id(forecasttemperature).state;
+  //     \ \n  current_temperature       = id(currenttemperature).state;\n  wether_condition
+  //     \          = id(wethercondition).state; \n  forecast_wether_condition = id(forecastwethercondition).state;\n
+  //     \  j=1;\n}\n\nif (countdowntime == 0)\n{\n  if(id(kitchensoket).state) { id(LedKitchenSoket).turn_on();
+  //     \ }\n  else { id(LedKitchenSoket).turn_off(); }\n}\n switch frame\n\n      
+  //     \ next frame\nif ( \n         id(next_frame).state \n    and next_frame_button_released
+  //     \   \n   ) \n{\n  it.printf(0, \"        \" );\n  i = i + (fraimtime - i%fraimtime)
+  //     \ ;\n   skip first 3 fraims becaues it shows same data\n  if ( i < 3 * fraimtime
+  //     \ ) { i = 3 * fraimtime; }\n  next_frame_button_released = false;\n}\nelse if(!id(next_frame).state)
+  //     \ {next_frame_button_released = true;}\n       previus frame\nif ( \n        id(previus_frame).state
+  //     \ \n    and i > 0 \n    and prev_frame_button_released \n   ) \n{ \n  it.printf(0,
+  //     \ \"        \" );\n   skip first 3 fraims becaues it shows same data\n  if (i
+  //     \ < 3 * fraimtime) \n  { i = 7 * fraimtime; }  last frame \n  else if \n  (\n
+  //     \        i > 3 * fraimtime \n    and i < 4 * fraimtime\n  ) \n  { i=0; }\n  else
+  //     \ { i = i - (fraimtime + i%fraimtime) ; }\n  prev_frame_button_released = false;\n
+  //     }\nelse if(!id(previus_frame).state) {prev_frame_button_released = true;}\n\n\n
+  //      dtostrf(i, 8, 2, str);\n ESP_LOGI(\"main\", str );\n\n GAS leds\n if (id(gasdetectedbinary).state
+  //     \ and (i%20<10)) { id(gasdetectedled).turn_on(); } \n else { id(gasdetectedled).turn_off();
+  //     \ }\n\n set timer adjustment\nif (id(set_timer_adjustment).state) {id(glogal_timer_adjustment)
   //     \ = 0;}\nif (id(glogal_timer_adjustment) != 0 and i%10 == 0) {id(glogal_timer_adjustment)--;}
-  //     \ \n\n synch with HA indicator\nif (i%150==0 ) \n{ \n    if ( id(synchwithhaled).state
-  //     \ ) { exist_conntction_to_ha = true; }\n    else { exist_conntction_to_ha = false;
-  //     \ }\n}\nif (exist_conntction_to_ha == true and i%50 == 0) { id(Led6).turn_on();
-  //     \ }\nelse { id(Led6).turn_off(); }\n\n GAS alarm\nif (id(gasdetectedbinary).state)
-  //     \ {gas_alart = true;}\n if (id(reset_gas_alarm).state) {gas_alart = false;}\n\n
-  //     if (!gas_alart)\n{\n   COUNTDOWN\n  if (id(timer1minute).state   ) {countdowntime
-  //     \ = 60;     it.printf(0, \"        \" );}      \n  if (id(timer3minutes).state 
-  //     \ ) {countdowntime = 3*60;   it.printf(0, \"        \" );}      \n  if (id(timer5minutes).state
-  //     \  ) {countdowntime = 5*60;   it.printf(0, \"        \" );}      \n  if (id(timer10minutes).state
+  //     \ \n\n synch with HA indicator\nif (countdowntime == 0)\n{\n  if (i%150==0 ) \n
+  //     \  { \n      if ( id(synchwithhaled).state ) { exist_conntction_to_ha = true; }\n
+  //     \      else { exist_conntction_to_ha = false; }\n  }\n  if (exist_conntction_to_ha
+  //     \ == true and i%50 == 0) { id(Led6).turn_on(); }\n  else { id(Led6).turn_off();
+  //     \ }\n}\n\n GAS alarm\nif (id(gasdetectedbinary).state) {gas_alart = true;}\n
+  //     \ if (id(reset_gas_alarm).state) {gas_alart = false;}\n\nif (!gas_alart)\n{\n  
+  //     \ COUNTDOWN\n  if (id(timer1minute).state   ) {countdowntime = 60;     it.printf(0,
+  //     \ \"        \" );}      \n  if (id(timer3minutes).state  ) {countdowntime = 3*60;
+  //     \   it.printf(0, \"        \" );}      \n  if (id(timer5minutes).state  ) {countdowntime
+  //     \ = 5*60;   it.printf(0, \"        \" );}      \n  if (id(timer10minutes).state
   //     \ ) {countdowntime = 10*60;  it.printf(0, \"        \" );}      \n  if (id(timer15minutes).state
   //     \ ) {countdowntime = 15*60;  it.printf(0, \"        \" );}      \n  if (countdowntime
   //     \ != 0 and i%2 == 0 )\n  {\n    it.printf(0, \"        \" );\n    it.printf(0, \"
@@ -978,19 +1002,19 @@ void setup() {
   //     \ == 0 ){ countdowntime--; }\n  }\n\n  if (    id(timer1minute).state  \n      or
   //     \ id(timer3minutes).state  \n      or id(timer5minutes).state  \n      or id(timer10minutes).state
   //     \ \n      or id(timer15minutes).state  \n      or id(glogal_timer_adjustment) !=
-  //     \ 0\n     )\n  { id(global_init_timer_seconds) = countdowntime ; }\n\n   WEATHER\n
-  //     \  if (countdowntime == 0  )\n  {\n    if (\n           i == 0 * fraimtime\n   
-  //     \     or i == 1 * fraimtime \n        or i == 2 * fraimtime \n       )\n    { \n
-  //     \      it.printf(0, \"        \" );  clean screen\n      it.printf(0, \"%.f\"
-  //     , feel_like_temperature); \n       it.printf(3, \"C\");\n      \n      if    
-  //     \  (wether_condition == \"rainy\" )        {it.printf(4, \"rAin\" ); }\n      else
-  //     \ if (wether_condition == \"cloudy\")        {it.printf(4, \"clo\"  ); }\n     
-  //     \ else if (wether_condition == \"partlycloudy\")  {it.printf(4, \"Pclo\" ); }\n
-  //     \      else if (wether_condition == \"fog\"   )        {it.printf(4, \"Fog\"  );
-  //     \ }\n      else if (wether_condition == \"snowy\" )        {it.printf(4, \"snig\"
-  //     \ ); }\n      else if (wether_condition == \"sunny\" )        {it.printf(4, \"sun\"
-  //     \  ); }\n      else if (wether_condition == \"windy\" )        {it.printf(4, \"
-  //     blo\"  ); }\n      else if (wether_condition == \"clear-night\" )  {it.printf(4,
+  //     \ 0\n     )\n  { \n    id(global_init_timer_seconds) = countdowntime ; \n    initConuntdownValue
+  //     \ = countdowntime ;\n  }\n\n   WEATHER\n  if (countdowntime == 0  )\n  {\n   
+  //     \ if (\n           i == 0 * fraimtime\n        or i == 1 * fraimtime \n        or
+  //     \ i == 2 * fraimtime \n       )\n    { \n      it.printf(0, \"        \" );  clean
+  //     \ screen\n      it.printf(0, \"%.f\", feel_like_temperature); \n       it.printf(3,
+  //     \ \"C\");\n      \n      if      (wether_condition == \"rainy\" )        {it.printf(4,
+  //     \ \"rAin\" ); }\n      else if (wether_condition == \"cloudy\")        {it.printf(4,
+  //     \ \"clo\"  ); }\n      else if (wether_condition == \"partlycloudy\")  {it.printf(4,
+  //     \ \"Pclo\" ); }\n      else if (wether_condition == \"fog\"   )        {it.printf(4,
+  //     \ \"Fog\"  ); }\n      else if (wether_condition == \"snowy\" )        {it.printf(4,
+  //     \ \"snig\" ); }\n      else if (wether_condition == \"sunny\" )        {it.printf(4,
+  //     \ \"sun\"  ); }\n      else if (wether_condition == \"windy\" )        {it.printf(4,
+  //     \ \"blo\"  ); }\n      else if (wether_condition == \"clear-night\" )  {it.printf(4,
   //     \ \"clrn\" ); }\n      else if (wether_condition == \"unLo\" )         {it.printf(4,
   //     \ \"unLo\" ); }\n      else if (wether_condition == \"pouring\" )      {it.printf(4,
   //     \ \"Hrai\" ); }\n      else {it.printf(4, \"unno\"  ); } \n    }\n    else if (i
@@ -1072,8 +1096,9 @@ void setup() {
   tm1638_display->register_listener(previus_frame);
   tm1638_display->register_listener(next_frame);
   tm1638_display->register_listener(turnonkitchensoket);
-  gasdetectedled->set_tm1638(tm1638_display);
+  Led0->set_tm1638(tm1638_display);
   LedKitchenSoket->set_tm1638(tm1638_display);
+  Led2->set_tm1638(tm1638_display);
   Led3->set_tm1638(tm1638_display);
   Led4->set_tm1638(tm1638_display);
   Led5->set_tm1638(tm1638_display);
@@ -1104,8 +1129,8 @@ void setup() {
   global_init_timer_seconds->set_component_source("globals");
   App.register_component(global_init_timer_seconds);
   tm1638_display->set_writer([=](tm1638::TM1638Component & it) -> void {
-      #line 276 "air-player1.yaml"
-      char str[32];
+      #line 279 "air-player1.yaml"
+       
        
        
       
@@ -1114,6 +1139,7 @@ void setup() {
       static int j = 1500;
       static int countdowntime = 0;
       static int fraimtime = 40;  
+      static int initConuntdownValue = 0;  
       static bool gas_alart = false;
       static bool next_frame_button_released = false;
       static bool prev_frame_button_released = false;
@@ -1129,6 +1155,28 @@ void setup() {
       
       
       countdowntime = global_timer_seconds->value(); 
+       
+      if(  countdowntime >0 and initConuntdownValue > 0 and j % 10 == 0)
+      {
+         
+         
+         
+        if (8 * countdowntime == 8 * initConuntdownValue)
+        {
+          Led0->turn_on(); LedKitchenSoket->turn_on(); Led2->turn_on(); Led3->turn_on();
+          Led4->turn_on(); Led5->turn_on();            Led6->turn_on(); Led7->turn_on();
+        }
+        else if(8 * countdowntime > 7 * initConuntdownValue) { Led7->turn_off();  }
+        else if(8 * countdowntime > 6 * initConuntdownValue) { Led6->turn_off(); }
+        else if(8 * countdowntime > 5 * initConuntdownValue) { Led5->turn_off(); }
+        else if(8 * countdowntime > 4 * initConuntdownValue) { Led4->turn_off(); }
+        else if(8 * countdowntime > 3 * initConuntdownValue) { Led3->turn_off(); }
+        else if(8 * countdowntime > 2 * initConuntdownValue) { Led2->turn_off(); }
+        else if(8 * countdowntime > 1 * initConuntdownValue) { LedKitchenSoket->turn_off(); }
+        else if(8 * countdowntime > 0 * initConuntdownValue) { Led0->turn_off(); }
+      }
+      
+      
       if ( i>15000 ){ i=0; }  
       if ( j>15000 ){ j=0; }  
       
@@ -1150,9 +1198,11 @@ void setup() {
         j=1;
       }
       
-      if(kitchensoket->state)
-      { LedKitchenSoket->turn_on(); }
-      else { LedKitchenSoket->turn_off(); }
+      if (countdowntime == 0)
+      {
+        if(kitchensoket->state) { LedKitchenSoket->turn_on(); }
+        else { LedKitchenSoket->turn_off(); }
+      }
        
       
              
@@ -1195,21 +1245,24 @@ void setup() {
        
       
        
-      if (gasdetectedbinary->state and (i%20<10)) { gasdetectedled->turn_on(); } 
-      else { gasdetectedled->turn_off(); }
+       
+       
       
        
       if (set_timer_adjustment->state) {glogal_timer_adjustment->value() = 0;}
       if (glogal_timer_adjustment->value() != 0 and i%10 == 0) {glogal_timer_adjustment->value()--;} 
       
        
-      if (i%150==0 ) 
-      { 
-          if ( synchwithhaled->state ) { exist_conntction_to_ha = true; }
-          else { exist_conntction_to_ha = false; }
+      if (countdowntime == 0)
+      {
+        if (i%150==0 ) 
+        { 
+            if ( synchwithhaled->state ) { exist_conntction_to_ha = true; }
+            else { exist_conntction_to_ha = false; }
+        }
+        if (exist_conntction_to_ha == true and i%50 == 0) { Led6->turn_on(); }
+        else { Led6->turn_off(); }
       }
-      if (exist_conntction_to_ha == true and i%50 == 0) { Led6->turn_on(); }
-      else { Led6->turn_off(); }
       
        
       if (gasdetectedbinary->state) {gas_alart = true;}
@@ -1238,7 +1291,10 @@ void setup() {
             or timer15minutes->state  
             or glogal_timer_adjustment->value() != 0
            )
-        { global_init_timer_seconds->value() = countdowntime ; }
+        { 
+          global_init_timer_seconds->value() = countdowntime ; 
+          initConuntdownValue = countdowntime ;
+        }
       
          
         if (countdowntime == 0  )
@@ -1361,7 +1417,7 @@ void setup() {
       else { return false; }
   });
   lambdaaction = new LambdaAction<>([=]() -> void {
-      #line 227 "air-player1.yaml"
+      #line 230 "air-player1.yaml"
       global_timer_seconds->value() = global_timer_seconds->value() + (30 - global_timer_seconds->value()%30) ;
       glogal_timer_adjustment->value() = 3;
   });
@@ -1369,7 +1425,7 @@ void setup() {
   rotary_encoder_rotaryencoderanticlockwisetrigger = new rotary_encoder::RotaryEncoderAnticlockwiseTrigger(rotary_encoder_rotaryencodersensor);
   automation_2 = new Automation<>(rotary_encoder_rotaryencoderanticlockwisetrigger);
   lambdaaction_2 = new LambdaAction<>([=]() -> void {
-      #line 231 "air-player1.yaml"
+      #line 234 "air-player1.yaml"
       if ( global_timer_seconds->value() >= 30 )
       { 
         if (global_timer_seconds->value()%30 != 0 )
