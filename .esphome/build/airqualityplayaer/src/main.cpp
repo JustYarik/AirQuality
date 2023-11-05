@@ -797,8 +797,8 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     inverted: false
   //     id: esp32_esp32internalgpiopin_3
+  //     inverted: false
   //     drive_strength: 20.0
   //   pin_b:
   //     number: 14
@@ -808,8 +808,8 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     inverted: false
   //     id: esp32_esp32internalgpiopin_4
+  //     inverted: false
   //     drive_strength: 20.0
   //   resolution: 2
   //   on_clockwise:
@@ -908,8 +908,8 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     inverted: false
   //     id: esp32_esp32internalgpiopin_5
+  //     inverted: false
   //     drive_strength: 20.0
   //   clk_pin:
   //     number: 22
@@ -919,8 +919,8 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     inverted: false
   //     id: esp32_esp32internalgpiopin_6
+  //     inverted: false
   //     drive_strength: 20.0
   //   dio_pin:
   //     number: 23
@@ -930,8 +930,8 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     inverted: false
   //     id: esp32_esp32internalgpiopin_7
+  //     inverted: false
   //     drive_strength: 20.0
   //   intensity: 5
   //   update_interval: 100ms
@@ -968,21 +968,23 @@ void setup() {
   //     \ \n  current_temperature       = id(currenttemperature).state;\n  wether_condition
   //     \          = id(wethercondition).state; \n  forecast_wether_condition = id(forecastwethercondition).state;\n
   //     \  j=1;\n}\n\nif (countdowntime == 0)\n{\n  if(id(kitchensoket).state) { id(LedKitchenSoket).turn_on();
-  //     \ }\n  else { id(LedKitchenSoket).turn_off(); }\n}\n switch frame\n\n      
-  //     \ next frame\nif ( \n         id(next_frame).state \n    and next_frame_button_released
-  //     \   \n   ) \n{\n  it.printf(0, \"        \" );\n  i = i + (fraimtime - i%fraimtime)
-  //     \ ;\n   skip first 3 fraims becaues it shows same data\n  if ( i < 3 * fraimtime
-  //     \ ) { i = 3 * fraimtime; }\n  next_frame_button_released = false;\n}\nelse if(!id(next_frame).state)
-  //     \ {next_frame_button_released = true;}\n       previus frame\nif ( \n        id(previus_frame).state
-  //     \ \n    and i > 0 \n    and prev_frame_button_released \n   ) \n{ \n  it.printf(0,
-  //     \ \"        \" );\n   skip first 3 fraims becaues it shows same data\n  if (i
-  //     \ < 3 * fraimtime) \n  { i = 7 * fraimtime; }  last frame \n  else if \n  (\n
-  //     \        i > 3 * fraimtime \n    and i < 4 * fraimtime\n  ) \n  { i=0; }\n  else
-  //     \ { i = i - (fraimtime + i%fraimtime) ; }\n  prev_frame_button_released = false;\n
-  //     }\nelse if(!id(previus_frame).state) {prev_frame_button_released = true;}\n\n\n
-  //      dtostrf(i, 8, 2, str);\n ESP_LOGI(\"main\", str );\n\n GAS leds\n if (id(gasdetectedbinary).state
-  //     \ and (i%20<10)) { id(gasdetectedled).turn_on(); } \n else { id(gasdetectedled).turn_off();
-  //     \ }\n\n set timer adjustment\nif (id(set_timer_adjustment).state) {id(glogal_timer_adjustment)
+  //     \ }\n  else { id(LedKitchenSoket).turn_off(); }\n  \n  id(Led0).turn_off(); id(Led2).turn_off();
+  //     \ id(Led3).turn_off(); id(Led4).turn_off();\n  id(Led5).turn_off(); id(Led7).turn_off();
+  //     \ \n}\n\n switch frame\n\n       next frame\nif ( \n         id(next_frame).state
+  //     \ \n    and next_frame_button_released   \n   ) \n{\n  it.printf(0, \"        \"
+  //     \ );\n  i = i + (fraimtime - i%fraimtime) ;\n   skip first 3 fraims becaues it
+  //     \ shows same data\n  if ( i < 3 * fraimtime ) { i = 3 * fraimtime; }\n  next_frame_button_released
+  //     \ = false;\n}\nelse if(!id(next_frame).state) {next_frame_button_released = true;}\n
+  //     \       previus frame\nif ( \n        id(previus_frame).state \n    and i > 0
+  //     \ \n    and prev_frame_button_released \n   ) \n{ \n  it.printf(0, \"        \"
+  //     \ );\n   skip first 3 fraims becaues it shows same data\n  if (i < 3 * fraimtime)
+  //     \ \n  { i = 7 * fraimtime; }  last frame \n  else if \n  (\n        i > 3 * fraimtime
+  //     \ \n    and i < 4 * fraimtime\n  ) \n  { i=0; }\n  else { i = i - (fraimtime + i%fraimtime)
+  //     \ ; }\n  prev_frame_button_released = false;\n}\nelse if(!id(previus_frame).state)
+  //     \ {prev_frame_button_released = true;}\n\n\n dtostrf(i, 8, 2, str);\n ESP_LOGI(\"
+  //     main\", str );\n\n GAS leds\n if (id(gasdetectedbinary).state and (i%20<10))
+  //     \ { id(gasdetectedled).turn_on(); } \n else { id(gasdetectedled).turn_off(); }\n
+  //     \n set timer adjustment\nif (id(set_timer_adjustment).state) {id(glogal_timer_adjustment)
   //     \ = 0;}\nif (id(glogal_timer_adjustment) != 0 and i%10 == 0) {id(glogal_timer_adjustment)--;}
   //     \ \n\n synch with HA indicator\nif (countdowntime == 0)\n{\n  if (i%150==0 ) \n
   //     \  { \n      if ( id(synchwithhaled).state ) { exist_conntction_to_ha = true; }\n
@@ -1202,7 +1204,11 @@ void setup() {
       {
         if(kitchensoket->state) { LedKitchenSoket->turn_on(); }
         else { LedKitchenSoket->turn_off(); }
+        
+        Led0->turn_off(); Led2->turn_off(); Led3->turn_off(); Led4->turn_off();
+        Led5->turn_off(); Led7->turn_off(); 
       }
+      
        
       
              

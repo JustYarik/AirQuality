@@ -348,7 +348,11 @@ display:
     {
       if(id(kitchensoket).state) { id(LedKitchenSoket).turn_on(); }
       else { id(LedKitchenSoket).turn_off(); }
+      
+      id(Led0).turn_off(); id(Led2).turn_off(); id(Led3).turn_off(); id(Led4).turn_off();
+      id(Led5).turn_off(); id(Led7).turn_off(); 
     }
+
     // switch frame
 
           // next frame
