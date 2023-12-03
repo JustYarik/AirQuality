@@ -135,6 +135,7 @@
  src/esphome/components/binary_sensor/filter.h \
  src/esphome/components/text_sensor/text_sensor.h \
  src/esphome/components/text_sensor/filter.h \
+ src/esphome/components/button/button.h \
  src/esphome/components/media_player/media_player.h \
  src/esphome/components/api/list_entities.h \
  src/esphome/core/component_iterator.h \
@@ -147,6 +148,7 @@
  src/esphome/components/api/homeassistant_service.h \
  src/esphome/components/binary_sensor/automation.h \
  src/esphome/components/bmp280/bmp280.h \
+ src/esphome/components/button/automation.h \
  src/esphome/components/captive_portal/captive_index.h \
  src/esphome/components/captive_portal/captive_portal.h \
  /Users/yaroslavpodoba/.platformio/packages/framework-arduinoespressif32@3.20005.220925/libraries/DNSServer/src/DNSServer.h \
@@ -361,6 +363,7 @@
  src/esphome/components/output/binary_output.h \
  src/esphome/components/output/float_output.h \
  src/esphome/components/preferences/syncer.h \
+ src/esphome/components/restart/button/restart_button.h \
  src/esphome/components/rotary_encoder/rotary_encoder.h \
  src/esphome/components/sensor/automation.h \
  src/esphome/components/template/binary_sensor/template_binary_sensor.h \

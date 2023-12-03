@@ -5,6 +5,7 @@ using namespace esphome;
 using std::isnan;
 using std::min;
 using std::max;
+using namespace button;
 using namespace time;
 using namespace media_player;
 using namespace binary_sensor;
@@ -22,6 +23,7 @@ using namespace sensor;
 using namespace i2c;
 i2c::ArduinoI2CBus *i2c_arduinoi2cbus;
 preferences::IntervalSyncer *preferences_intervalsyncer;
+restart::RestartButton *restart_restartbutton;
 homeassistant::HomeassistantTime *ha_time;
 i2s_audio::I2SAudioComponent *i2s_audio_i2saudiocomponent;
 i2s_audio::I2SAudioMediaPlayer *i2s_audio_i2saudiomediaplayer;
@@ -104,6 +106,7 @@ void setup() {
   //   name_add_mac_suffix: false
   //   min_version: 2023.4.1
   App.pre_setup("airqualityplayaer", "Air Quality and Player", "", __DATE__ ", " __TIME__, false);
+  // button:
   // time:
   // media_player:
   // binary_sensor:
@@ -232,6 +235,22 @@ void setup() {
   preferences_intervalsyncer->set_write_interval(60000);
   preferences_intervalsyncer->set_component_source("preferences");
   App.register_component(preferences_intervalsyncer);
+  // button.restart:
+  //   platform: restart
+  //   name: Air Restart
+  //   disabled_by_default: false
+  //   id: restart_restartbutton
+  //   entity_category: config
+  //   device_class: restart
+  restart_restartbutton = new restart::RestartButton();
+  restart_restartbutton->set_component_source("restart.button");
+  App.register_component(restart_restartbutton);
+  App.register_button(restart_restartbutton);
+  restart_restartbutton->set_name("Air Restart");
+  restart_restartbutton->set_object_id("air_restart");
+  restart_restartbutton->set_disabled_by_default(false);
+  restart_restartbutton->set_entity_category(::ENTITY_CATEGORY_CONFIG);
+  restart_restartbutton->set_device_class("restart");
   // time.homeassistant:
   //   platform: homeassistant
   //   id: ha_time
@@ -797,8 +816,8 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     drive_strength: 20.0
   //     inverted: false
+  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_3
   //   pin_b:
   //     number: 14
@@ -808,8 +827,8 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     drive_strength: 20.0
   //     inverted: false
+  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_4
   //   resolution: 2
   //   on_clockwise:
@@ -908,8 +927,8 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     drive_strength: 20.0
   //     inverted: false
+  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_5
   //   clk_pin:
   //     number: 22
@@ -919,8 +938,8 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     drive_strength: 20.0
   //     inverted: false
+  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_6
   //   dio_pin:
   //     number: 23
@@ -930,8 +949,8 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     drive_strength: 20.0
   //     inverted: false
+  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_7
   //   intensity: 5
   //   update_interval: 100ms
@@ -948,7 +967,7 @@ void setup() {
   //     static std::string wether_condition = \"unLo\"; id(wethercondition).state;\nstatic
   //     \ std::string forecast_wether_condition = \"unLo\"; id(forecastwethercondition).state;\n
   //     \ \n\n\ncountdowntime = id(global_timer_seconds); \n countdown LEDs\nif(  countdowntime
-  //     \ >0 and initConuntdownValue > 0 and j % 2 == 0)\n{\n   char str[32];\n   dtostrf(countdowntime/initConuntdownValue,
+  //     \ > 0 and initConuntdownValue > 0 and j % 2 == 0)\n{\n   char str[32];\n   dtostrf(countdowntime/initConuntdownValue,
   //     \ 8, 2, str);\n   ESP_LOGI(\"main\", str );\n  if (8 * countdowntime == 8 * initConuntdownValue)\n
   //     \  {\n    id(Led0).turn_on(); id(LedKitchenSoket).turn_on(); id(Led2).turn_on();
   //     \ id(Led3).turn_on();\n    id(Led4).turn_on(); id(Led5).turn_on();            id(Led6).turn_on();
@@ -1136,7 +1155,7 @@ void setup() {
   global_init_timer_seconds->set_component_source("globals");
   App.register_component(global_init_timer_seconds);
   tm1638_display->set_writer([=](tm1638::TM1638Component & it) -> void {
-      #line 279 "air-player1.yaml"
+      #line 283 "air-player1.yaml"
        
        
        
@@ -1163,7 +1182,7 @@ void setup() {
       
       countdowntime = global_timer_seconds->value(); 
        
-      if(  countdowntime >0 and initConuntdownValue > 0 and j % 2 == 0)
+      if(  countdowntime > 0 and initConuntdownValue > 0 and j % 2 == 0)
       {
          
          
@@ -1429,13 +1448,13 @@ void setup() {
       if (i> 8 * fraimtime) {i=0;}  
   });
   timer_is_active->set_template([=]() -> optional<bool> {
-      #line 130 "air-player1.yaml"
+      #line 134 "air-player1.yaml"
        
       if (global_timer_seconds->value() != 0 ) { return true; } 
       else { return false; }
   });
   lambdaaction = new LambdaAction<>([=]() -> void {
-      #line 230 "air-player1.yaml"
+      #line 234 "air-player1.yaml"
       global_timer_seconds->value() = global_timer_seconds->value() + (30 - global_timer_seconds->value()%30) ;
       glogal_timer_adjustment->value() = 3;
   });
@@ -1443,7 +1462,7 @@ void setup() {
   rotary_encoder_rotaryencoderanticlockwisetrigger = new rotary_encoder::RotaryEncoderAnticlockwiseTrigger(rotary_encoder_rotaryencodersensor);
   automation_2 = new Automation<>(rotary_encoder_rotaryencoderanticlockwisetrigger);
   lambdaaction_2 = new LambdaAction<>([=]() -> void {
-      #line 234 "air-player1.yaml"
+      #line 238 "air-player1.yaml"
       if ( global_timer_seconds->value() >= 30 )
       { 
         if (global_timer_seconds->value()%30 != 0 )

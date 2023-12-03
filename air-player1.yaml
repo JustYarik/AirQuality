@@ -31,6 +31,10 @@ wifi:
     ssid: "Esphome-Web-airplayer"
     password: "1234567890"
 
+button:
+  - platform: restart
+    name: "Air Restart"
+
 time:
   - platform: homeassistant
     id: ha_time
