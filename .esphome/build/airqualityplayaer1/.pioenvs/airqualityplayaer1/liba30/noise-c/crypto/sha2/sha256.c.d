@@ -1,0 +1,3 @@
+.pioenvs/airqualityplayaer1/liba30/noise-c/crypto/sha2/sha256.c.o: \
+ .piolibdeps/airqualityplayaer1/noise-c/src/crypto/sha2/sha256.c \
+ .piolibdeps/airqualityplayaer1/noise-c/include/noise/defines.h

@@ -1,0 +1,20 @@
+.pioenvs/airqualityplayaer1/libb48/libsodium/sodium/core.c.o: \
+ .piolibdeps/airqualityplayaer1/libsodium/libsodium/src/libsodium/sodium/core.c \
+ /Users/yaroslavpodoba/.platformio/packages/framework-arduinoespressif32@3.20005.220925/tools/sdk/esp32/include/newlib/platform_include/assert.h \
+ /Users/yaroslavpodoba/.platformio/packages/framework-arduinoespressif32@3.20005.220925/tools/sdk/esp32/dio_qspi/include/sdkconfig.h \
+ /Users/yaroslavpodoba/.platformio/packages/framework-arduinoespressif32@3.20005.220925/tools/sdk/esp32/include/newlib/platform_include/time.h \
+ .piolibdeps/airqualityplayaer1/libsodium/libsodium/src/libsodium/include/sodium/core.h \
+ .piolibdeps/airqualityplayaer1/libsodium/libsodium/src/libsodium/include/sodium/export.h \
+ .piolibdeps/airqualityplayaer1/libsodium/libsodium/src/libsodium/include/sodium/crypto_generichash.h \
+ .piolibdeps/airqualityplayaer1/libsodium/libsodium/src/libsodium/include/sodium/crypto_generichash_blake2b.h \
+ .piolibdeps/airqualityplayaer1/libsodium/libsodium/src/libsodium/include/sodium/crypto_onetimeauth.h \
+ .piolibdeps/airqualityplayaer1/libsodium/libsodium/src/libsodium/include/sodium/crypto_onetimeauth_poly1305.h \
+ .piolibdeps/airqualityplayaer1/libsodium/libsodium/src/libsodium/include/sodium/crypto_scalarmult.h \
+ .piolibdeps/airqualityplayaer1/libsodium/libsodium/src/libsodium/include/sodium/crypto_scalarmult_curve25519.h \
+ .piolibdeps/airqualityplayaer1/libsodium/libsodium/src/libsodium/include/sodium/crypto_stream_chacha20.h \
+ .piolibdeps/airqualityplayaer1/libsodium/libsodium/src/libsodium/include/sodium/crypto_stream_salsa20.h \
+ .piolibdeps/airqualityplayaer1/libsodium/libsodium/src/libsodium/include/sodium/randombytes.h \
+ .piolibdeps/airqualityplayaer1/libsodium/libsodium/src/libsodium/include/sodium/runtime.h \
+ .piolibdeps/airqualityplayaer1/libsodium/libsodium/src/libsodium/include/sodium/utils.h \
+ .piolibdeps/airqualityplayaer1/libsodium/libsodium/src/libsodium/include/sodium/private/implementations.h \
+ .piolibdeps/airqualityplayaer1/libsodium/libsodium/src/libsodium/include/sodium/private/mutex.h

@@ -98,14 +98,14 @@ void setup() {
   //   {}
   // esphome:
   //   name: airqualityplayaer
-  //   friendly_name: Air Quality and Player
+  //   friendly_name: Air Quality and Player1
   //   build_path: .esphome/build/airqualityplayaer
   //   platformio_options: {}
   //   includes: []
   //   libraries: []
   //   name_add_mac_suffix: false
   //   min_version: 2023.4.1
-  App.pre_setup("airqualityplayaer", "Air Quality and Player", "", __DATE__ ", " __TIME__, false);
+  App.pre_setup("airqualityplayaer", "Air Quality and Player1", "", __DATE__ ", " __TIME__, false);
   // button:
   // time:
   // media_player:
@@ -816,9 +816,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     inverted: false
   //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_3
+  //     inverted: false
   //   pin_b:
   //     number: 14
   //     mode:
@@ -827,9 +827,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     inverted: false
   //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_4
+  //     inverted: false
   //   resolution: 2
   //   on_clockwise:
   //   - then:
@@ -927,9 +927,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     inverted: false
   //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_5
+  //     inverted: false
   //   clk_pin:
   //     number: 22
   //     mode:
@@ -938,9 +938,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     inverted: false
   //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_6
+  //     inverted: false
   //   dio_pin:
   //     number: 23
   //     mode:
@@ -949,9 +949,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     inverted: false
   //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_7
+  //     inverted: false
   //   intensity: 5
   //   update_interval: 100ms
   //   lambda: !lambda " char str[32];\n dtostrf(i, 8, 2, str);\n ESP_LOGI(\"main\"

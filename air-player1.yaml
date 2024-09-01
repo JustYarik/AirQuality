@@ -1,6 +1,6 @@
 esphome:
-  name: airqualityplayaer 
-  friendly_name: Air Quality and Player
+  name: airqualityplayaer1 
+  friendly_name: Air Quality and Player1
 
 esp32:
   board: nodemcu-32s
@@ -25,7 +25,13 @@ i2c:
 wifi:
   ssid: "Tenda_16EF40"
   password: "1234567890"
-
+  manual_ip:
+    # Set this to the IP of the ESP
+    static_ip: 192.168.0.103
+    # Set this to the IP address of the router. Often ends with .1
+    gateway: 192.168.0.101
+    # The subnet of the network. 255.255.255.0 works for most home networks.
+    subnet: 255.255.255.0
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: "Esphome-Web-airplayer"
