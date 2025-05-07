@@ -267,6 +267,32 @@ text_sensor:
     entity_id: sensor.openweathermap_forecast_condition
     internal: true
 
+
+template:
+  - sensor:
+      - name: "Forecast Next Hour Condition"
+        unique_id: forecast_next_hour_condition
+        state: >
+          {% set forecast = state_attr('weather.openweathermap', 'forecast') %}
+          {% if forecast %}
+            {{ forecast[0].condition }}
+          {% else %}
+            unknown
+          {% endif %}
+        attributes:
+          forecast_time: >
+            {% if forecast %}
+              {{ forecast[0].datetime }}
+            {% else %}
+              unknown
+            {% endif %}
+          temperature: >
+            {% if forecast %}
+              {{ forecast[0].temperature }}
+            {% else %}
+              unknown
+            {% endif %}
+
 globals:
   - id: global_timer_seconds
     type: int

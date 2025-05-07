@@ -663,7 +663,7 @@ void setup() {
   // sensor.homeassistant:
   //   platform: homeassistant
   //   id: forecasttemperature
-  //   entity_id: sensor.openweathermap_forecast_temperature
+  //   entity_id: input_number.forecast_temperature
   //   internal: true
   //   disabled_by_default: false
   //   force_update: false
@@ -679,7 +679,7 @@ void setup() {
   forecasttemperature->set_force_update(false);
   forecasttemperature->set_component_source("homeassistant.sensor");
   App.register_component(forecasttemperature);
-  forecasttemperature->set_entity_id("sensor.openweathermap_forecast_temperature");
+  forecasttemperature->set_entity_id("input_number.forecast_temperature");
   // sensor.aht10:
   //   platform: aht10
   //   address: 0x38
@@ -847,8 +847,8 @@ void setup() {
   //       pullup: false
   //       pulldown: false
   //     drive_strength: 20.0
-  //     id: esp32_esp32internalgpiopin_3
   //     inverted: false
+  //     id: esp32_esp32internalgpiopin_3
   //   pin_b:
   //     number: 14
   //     mode:
@@ -858,8 +858,8 @@ void setup() {
   //       pullup: false
   //       pulldown: false
   //     drive_strength: 20.0
-  //     id: esp32_esp32internalgpiopin_4
   //     inverted: false
+  //     id: esp32_esp32internalgpiopin_4
   //   resolution: 2
   //   on_clockwise:
   //   - then:
@@ -933,19 +933,19 @@ void setup() {
   // text_sensor.homeassistant:
   //   platform: homeassistant
   //   id: forecastwethercondition
-  //   name: Forecast Wether Condition
-  //   entity_id: sensor.openweathermap_forecast_condition
+  //   entity_id: input_text.forecast_condition
   //   internal: true
   //   disabled_by_default: false
+  //   name: forecastwethercondition
   forecastwethercondition = new homeassistant::HomeassistantTextSensor();
   App.register_text_sensor(forecastwethercondition);
-  forecastwethercondition->set_name("Forecast Wether Condition");
-  forecastwethercondition->set_object_id("forecast_wether_condition");
+  forecastwethercondition->set_name("forecastwethercondition");
+  forecastwethercondition->set_object_id("forecastwethercondition");
   forecastwethercondition->set_disabled_by_default(false);
   forecastwethercondition->set_internal(true);
   forecastwethercondition->set_component_source("homeassistant.text_sensor");
   App.register_component(forecastwethercondition);
-  forecastwethercondition->set_entity_id("sensor.openweathermap_forecast_condition");
+  forecastwethercondition->set_entity_id("input_text.forecast_condition");
   // display.tm1638:
   //   platform: tm1638
   //   id: tm1638_display
@@ -958,8 +958,8 @@ void setup() {
   //       pullup: false
   //       pulldown: false
   //     drive_strength: 20.0
-  //     id: esp32_esp32internalgpiopin_5
   //     inverted: false
+  //     id: esp32_esp32internalgpiopin_5
   //   clk_pin:
   //     number: 22
   //     mode:
@@ -969,8 +969,8 @@ void setup() {
   //       pullup: false
   //       pulldown: false
   //     drive_strength: 20.0
-  //     id: esp32_esp32internalgpiopin_6
   //     inverted: false
+  //     id: esp32_esp32internalgpiopin_6
   //   dio_pin:
   //     number: 23
   //     mode:
@@ -980,8 +980,8 @@ void setup() {
   //       pullup: false
   //       pulldown: false
   //     drive_strength: 20.0
-  //     id: esp32_esp32internalgpiopin_7
   //     inverted: false
+  //     id: esp32_esp32internalgpiopin_7
   //   intensity: 5
   //   update_interval: 100ms
   //   lambda: !lambda " char str[32];\n dtostrf(i, 8, 2, str);\n ESP_LOGI(\"main\"
@@ -1187,7 +1187,7 @@ void setup() {
   global_init_timer_seconds->set_component_source("globals");
   App.register_component(global_init_timer_seconds);
   tm1638_display->set_writer([=](tm1638::TM1638Component & it) -> void {
-      #line 293 "air-player2.yaml"
+      #line 293 "air-player3.yaml"
        
        
        
@@ -1485,13 +1485,13 @@ void setup() {
       if (i> 8 * fraimtime) {i=0;}  
   });
   timer_is_active->set_template([=]() -> optional<bool> {
-      #line 144 "air-player2.yaml"
+      #line 144 "air-player3.yaml"
        
       if (global_timer_seconds->value() != 0 ) { return true; } 
       else { return false; }
   });
   lambdaaction = new LambdaAction<>([=]() -> void {
-      #line 244 "air-player2.yaml"
+      #line 244 "air-player3.yaml"
       global_timer_seconds->value() = global_timer_seconds->value() + (30 - global_timer_seconds->value()%30) ;
       glogal_timer_adjustment->value() = 3;
   });
@@ -1499,7 +1499,7 @@ void setup() {
   rotary_encoder_rotaryencoderanticlockwisetrigger = new rotary_encoder::RotaryEncoderAnticlockwiseTrigger(rotary_encoder_rotaryencodersensor);
   automation_2 = new Automation<>(rotary_encoder_rotaryencoderanticlockwisetrigger);
   lambdaaction_2 = new LambdaAction<>([=]() -> void {
-      #line 248 "air-player2.yaml"
+      #line 248 "air-player3.yaml"
       if ( global_timer_seconds->value() >= 30 )
       { 
         if (global_timer_seconds->value()%30 != 0 )
