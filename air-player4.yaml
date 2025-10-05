@@ -384,15 +384,23 @@ display:
 
     if (countdowntime == 0 )
     {
-      if(id(kitchensoket).state) { id(LedKitchenSoket).turn_on(); }
-      else { id(LedKitchenSoket).turn_off(); }
-      
       id(Led0).turn_off(); id(Led2).turn_off(); id(Led3).turn_off(); id(Led4).turn_off();
-      id(Led5).turn_off(); id(Led7).turn_off(); 
+
+      if  ( !(battery_state == "discharging" or battery_state == "charging"))  
+      {
+        id(Led5).turn_off(); id(Led6).turn_off(); id(Led7).turn_off(); 
+      }
+
+      if (id(acsensor).state) 
+      { id(Led0).turn_on(); }
+      else { id(Led0).turn_off(); } 
+
+      if(id(kitchensoket).state) { id(LedKitchenSoket).turn_on(); }
+      else { id(LedKitchenSoket).turn_off(); } 
+      
     }
 
     // switch frame
-
           // next frame
     if ( 
              id(next_frame).state 
@@ -432,30 +440,10 @@ display:
     // dtostrf(i, 8, 2, str);
     // ESP_LOGI("main", str );
 
-    // GAS leds
-    // if (id(gasdetectedbinary).state and (i%20<10)) { id(gasdetectedled).turn_on(); } 
-    // else { id(gasdetectedled).turn_off(); }
-
     // set timer adjustment
     if (id(set_timer_adjustment).state) {id(glogal_timer_adjustment) = 0;}
     if (id(glogal_timer_adjustment) != 0 and i%10 == 0) {id(glogal_timer_adjustment)--;} 
 
-    // synch with HA indicator
-    if (countdowntime == 0)
-    {
-      // if (i % 150==0 ) 
-      // { 
-      //     if ( id(synchwithhaled).state ) { exist_conntction_to_ha = true; }
-      //     else { exist_conntction_to_ha = false; }
-      // }
-      // if (exist_conntction_to_ha == true and i%50 == 0) { id(Led6).turn_on(); }
-      // else { id(Led6).turn_off(); }
-
-      if (id(acsensor).state) 
-      { id(Led0).turn_on(); }
-      else { id(Led0).turn_off(); } 
-    }
-    
     // GAS alarm
     if (id(gasdetectedbinary).state) {gas_alart = true;}
     // if (id(reset_gas_alarm).state) {gas_alart = false;}
@@ -616,8 +604,8 @@ display:
       if (battery_state == "charging" )
         {
           if ((i-10) % 40 + 10 == 40) { id(Led5).turn_off(); id(Led6).turn_off(); id(Led7).turn_off(); }
-          if ((i-10) % 40 + 10 == 30) { id(Led5).turn_on(); id(Led6).turn_on(); id(Led7).turn_on(); }
-          if ((i-10) % 40 + 10 == 20) { id(Led5).turn_on(); id(Led6).turn_on(); }
+          if ((i-10) % 40 + 10 == 30) { id(Led5).turn_on();  id(Led6).turn_on();  id(Led7).turn_on(); }
+          if ((i-10) % 40 + 10 == 20) { id(Led5).turn_on();  id(Led6).turn_on(); }
           if ((i-10) % 40 + 10 == 10) { id(Led5).turn_on(); }
         } 
 

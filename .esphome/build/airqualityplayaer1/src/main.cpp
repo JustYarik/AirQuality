@@ -868,9 +868,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     inverted: false
   //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_3
+  //     inverted: false
   //   pin_b:
   //     number: 14
   //     mode:
@@ -879,9 +879,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     inverted: false
   //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_4
+  //     inverted: false
   //   resolution: 2
   //   on_clockwise:
   //   - then:
@@ -995,9 +995,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     inverted: false
   //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_5
+  //     inverted: false
   //   clk_pin:
   //     number: 22
   //     mode:
@@ -1006,9 +1006,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     inverted: false
   //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_6
+  //     inverted: false
   //   dio_pin:
   //     number: 23
   //     mode:
@@ -1017,9 +1017,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     inverted: false
   //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_7
+  //     inverted: false
   //   intensity: 5
   //   update_interval: 100ms
   //   lambda: !lambda " char str[32];\n dtostrf(i, 8, 2, str);\n ESP_LOGI(\"main\"
@@ -1062,33 +1062,28 @@ void setup() {
   //     \ \n  forecast_temperature      = id(forecasttemperature).state; \n  current_temperature
   //     \       = id(currenttemperature).state;\n  wether_condition          = id(wethercondition).state;
   //     \ \n  forecast_wether_condition = id(forecastwethercondition).state;\n  j=1;\n}\n
-  //     \nif ( j % 1000 == 0 )\n{\n  inverter_battery_soc      = id(inverterbatterysoc).state;\n
+  //     \nif ( j % 1200 == 0 )  2 mins\n{\n  inverter_battery_soc      = id(inverterbatterysoc).state;\n
   //     \  battery_state             = id(batterystate).state;\n}\n\nif (countdowntime ==
-  //     \ 0 )\n{\n  if(id(kitchensoket).state) { id(LedKitchenSoket).turn_on(); }\n  else
-  //     \ { id(LedKitchenSoket).turn_off(); }\n  \n  id(Led0).turn_off(); id(Led2).turn_off();
-  //     \ id(Led3).turn_off(); id(Led4).turn_off();\n  id(Led5).turn_off(); id(Led7).turn_off();
-  //     \ \n}\n\n switch frame\n\n       next frame\nif ( \n         id(next_frame).state
-  //     \ \n    and next_frame_button_released   \n   ) \n{\n  it.printf(0, \"        \"
-  //     \ );\n  i = i + (fraimtime - i%fraimtime) ;\n   skip first 3 fraims becaues it
-  //     \ shows same data\n  if ( i < 3 * fraimtime ) { i = 3 * fraimtime; }\n  next_frame_button_released
-  //     \ = false;\n}\nelse if(!id(next_frame).state) {next_frame_button_released = true;}\n
-  //     \       previus frame\nif ( \n        id(previus_frame).state \n    and i > 0
-  //     \ \n    and prev_frame_button_released \n   ) \n{ \n  it.printf(0, \"        \"
-  //     \ );\n   skip first 3 fraims becaues it shows same data\n  if (i < 3 * fraimtime)
-  //     \ \n  { i = 7 * fraimtime; }  last frame \n  else if \n  (\n        i > 3 * fraimtime
-  //     \ \n    and i < 4 * fraimtime\n  ) \n  { i=0; }\n  else { i = i - (fraimtime + i%fraimtime)
-  //     \ ; }\n  prev_frame_button_released = false;\n}\nelse if(!id(previus_frame).state)
-  //     \ {prev_frame_button_released = true;}\n\n\n dtostrf(i, 8, 2, str);\n ESP_LOGI(\"
-  //     main\", str );\n\n GAS leds\n if (id(gasdetectedbinary).state and (i%20<10))
-  //     \ { id(gasdetectedled).turn_on(); } \n else { id(gasdetectedled).turn_off(); }\n
-  //     \n set timer adjustment\nif (id(set_timer_adjustment).state) {id(glogal_timer_adjustment)
-  //     \ = 0;}\nif (id(glogal_timer_adjustment) != 0 and i%10 == 0) {id(glogal_timer_adjustment)--;}
-  //     \ \n\n synch with HA indicator\nif (countdowntime == 0)\n{\n   if (i % 150==0
-  //     \ ) \n   { \n       if ( id(synchwithhaled).state ) { exist_conntction_to_ha
-  //     \ = true; }\n       else { exist_conntction_to_ha = false; }\n   }\n   if
-  //     \ (exist_conntction_to_ha == true and i%50 == 0) { id(Led6).turn_on(); }\n   else
-  //     \ { id(Led6).turn_off(); }\n\n  if (id(acsensor).state) \n  { id(Led0).turn_on();
-  //     \ }\n  else { id(Led0).turn_off(); } \n}\n\n GAS alarm\nif (id(gasdetectedbinary).state)
+  //     \ 0 )\n{\n  id(Led0).turn_off(); id(Led2).turn_off(); id(Led3).turn_off(); id(Led4).turn_off();\n
+  //     \n  if  ( !(battery_state == \"discharging\" or battery_state == \"charging\"))
+  //     \  \n  {\n    id(Led5).turn_off(); id(Led6).turn_off(); id(Led7).turn_off(); \n
+  //     \  }\n\n  if (id(acsensor).state) \n  { id(Led0).turn_on(); }\n  else { id(Led0).turn_off();
+  //     \ } \n\n  if(id(kitchensoket).state) { id(LedKitchenSoket).turn_on(); }\n  else
+  //     \ { id(LedKitchenSoket).turn_off(); } \n  \n}\n\n switch frame\n       next
+  //     \ frame\nif ( \n         id(next_frame).state \n    and next_frame_button_released
+  //     \   \n   ) \n{\n  it.printf(0, \"        \" );\n  i = i + (fraimtime - i%fraimtime)
+  //     \ ;\n   skip first 3 fraims becaues it shows same data\n  if ( i < 3 * fraimtime
+  //     \ ) { i = 3 * fraimtime; }\n  next_frame_button_released = false;\n}\nelse if(!id(next_frame).state)
+  //     \ {next_frame_button_released = true;}\n       previus frame\nif ( \n        id(previus_frame).state
+  //     \ \n    and i > 0 \n    and prev_frame_button_released \n   ) \n{ \n  it.printf(0,
+  //     \ \"        \" );\n   skip first 3 fraims becaues it shows same data\n  if (i
+  //     \ < 3 * fraimtime) \n  { i = 7 * fraimtime; }  last frame \n  else if \n  (\n
+  //     \        i > 3 * fraimtime \n    and i < 4 * fraimtime\n  ) \n  { i=0; }\n  else
+  //     \ { i = i - (fraimtime + i%fraimtime) ; }\n  prev_frame_button_released = false;\n
+  //     }\nelse if(!id(previus_frame).state) {prev_frame_button_released = true;}\n\n\n
+  //      dtostrf(i, 8, 2, str);\n ESP_LOGI(\"main\", str );\n\n set timer adjustment\n
+  //     if (id(set_timer_adjustment).state) {id(glogal_timer_adjustment) = 0;}\nif (id(glogal_timer_adjustment)
+  //     \ != 0 and i%10 == 0) {id(glogal_timer_adjustment)--;} \n\n GAS alarm\nif (id(gasdetectedbinary).state)
   //     \ {gas_alart = true;}\n if (id(reset_gas_alarm).state) {gas_alart = false;}\n\n
   //     if (!gas_alart)\n{\n   COUNTDOWN\n  if (id(timer1minute).state   ) {countdowntime
   //     \ = 60;     it.printf(0, \"        \" );}      \n  if (id(timer3minutes).state 
@@ -1167,8 +1162,8 @@ void setup() {
   //     \ \"charging\")  \n      and countdowntime == 0 \n   )\n{\n  if (battery_state ==
   //     \ \"charging\" )\n    {\n      if ((i-10) % 40 + 10 == 40) { id(Led5).turn_off();
   //     \ id(Led6).turn_off(); id(Led7).turn_off(); }\n      if ((i-10) % 40 + 10 == 30)
-  //     \ { id(Led5).turn_on(); id(Led6).turn_on(); id(Led7).turn_on(); }\n      if ((i-10)
-  //     \ % 40 + 10 == 20) { id(Led5).turn_on(); id(Led6).turn_on(); }\n      if ((i-10)
+  //     \ { id(Led5).turn_on();  id(Led6).turn_on();  id(Led7).turn_on(); }\n      if ((i-10)
+  //     \ % 40 + 10 == 20) { id(Led5).turn_on();  id(Led6).turn_on(); }\n      if ((i-10)
   //     \ % 40 + 10 == 10) { id(Led5).turn_on(); }\n    } \n\n    if(battery_state == \"
   //     discharging\" )\n    {\n      if ((i-10) % 40 + 10 == 40) { id(Led5).turn_off();
   //     \ id(Led6).turn_off(); id(Led7).turn_off();  }\n      if ((i-10) % 40 + 10 == 30)
@@ -1324,7 +1319,7 @@ void setup() {
         j=1;
       }
       
-      if ( j % 1000 == 0 )
+      if ( j % 1200 == 0 )  
       {
         inverter_battery_soc      = inverterbatterysoc->state;
         battery_state             = batterystate->state;
@@ -1332,15 +1327,23 @@ void setup() {
       
       if (countdowntime == 0 )
       {
-        if(kitchensoket->state) { LedKitchenSoket->turn_on(); }
-        else { LedKitchenSoket->turn_off(); }
-        
         Led0->turn_off(); Led2->turn_off(); Led3->turn_off(); Led4->turn_off();
-        Led5->turn_off(); Led7->turn_off(); 
+      
+        if  ( !(battery_state == "discharging" or battery_state == "charging"))  
+        {
+          Led5->turn_off(); Led6->turn_off(); Led7->turn_off(); 
+        }
+      
+        if (acsensor->state) 
+        { Led0->turn_on(); }
+        else { Led0->turn_off(); } 
+      
+        if(kitchensoket->state) { LedKitchenSoket->turn_on(); }
+        else { LedKitchenSoket->turn_off(); } 
+        
       }
       
        
-      
              
       if ( 
                next_frame->state 
@@ -1381,28 +1384,8 @@ void setup() {
        
       
        
-       
-       
-      
-       
       if (set_timer_adjustment->state) {glogal_timer_adjustment->value() = 0;}
       if (glogal_timer_adjustment->value() != 0 and i%10 == 0) {glogal_timer_adjustment->value()--;} 
-      
-       
-      if (countdowntime == 0)
-      {
-         
-         
-         
-         
-         
-         
-         
-      
-        if (acsensor->state) 
-        { Led0->turn_on(); }
-        else { Led0->turn_off(); } 
-      }
       
        
       if (gasdetectedbinary->state) {gas_alart = true;}
@@ -1564,8 +1547,8 @@ void setup() {
         if (battery_state == "charging" )
           {
             if ((i-10) % 40 + 10 == 40) { Led5->turn_off(); Led6->turn_off(); Led7->turn_off(); }
-            if ((i-10) % 40 + 10 == 30) { Led5->turn_on(); Led6->turn_on(); Led7->turn_on(); }
-            if ((i-10) % 40 + 10 == 20) { Led5->turn_on(); Led6->turn_on(); }
+            if ((i-10) % 40 + 10 == 30) { Led5->turn_on();  Led6->turn_on();  Led7->turn_on(); }
+            if ((i-10) % 40 + 10 == 20) { Led5->turn_on();  Led6->turn_on(); }
             if ((i-10) % 40 + 10 == 10) { Led5->turn_on(); }
           } 
       
