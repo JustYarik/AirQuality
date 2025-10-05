@@ -56,6 +56,7 @@ tm1638::TM1638OutputLed *Led7;
 homeassistant::HomeassistantSensor *currenttemperature;
 homeassistant::HomeassistantSensor *feelLiketemperature;
 homeassistant::HomeassistantSensor *forecasttemperature;
+homeassistant::HomeassistantSensor *inverterbatterysoc;
 aht10::AHT10Component *aht10_aht10component;
 sensor::Sensor *internal_temperature;
 sensor::CalibrateLinearFilter *sensor_calibratelinearfilter;
@@ -75,6 +76,7 @@ rotary_encoder::RotaryEncoderClockwiseTrigger *rotary_encoder_rotaryencoderclock
 Automation<> *automation;
 homeassistant::HomeassistantTextSensor *wethercondition;
 homeassistant::HomeassistantTextSensor *forecastwethercondition;
+homeassistant::HomeassistantTextSensor *batterystate;
 tm1638::TM1638Component *tm1638_display;
 esp32::ESP32InternalGPIOPin *esp32_esp32internalgpiopin_6;
 esp32::ESP32InternalGPIOPin *esp32_esp32internalgpiopin_7;
@@ -680,6 +682,26 @@ void setup() {
   forecasttemperature->set_component_source("homeassistant.sensor");
   App.register_component(forecasttemperature);
   forecasttemperature->set_entity_id("input_number.forecast_temperature");
+  // sensor.homeassistant:
+  //   platform: homeassistant
+  //   id: inverterbatterysoc
+  //   entity_id: sensor.inverter_battery
+  //   internal: true
+  //   disabled_by_default: false
+  //   force_update: false
+  //   accuracy_decimals: 1
+  //   name: inverterbatterysoc
+  inverterbatterysoc = new homeassistant::HomeassistantSensor();
+  App.register_sensor(inverterbatterysoc);
+  inverterbatterysoc->set_name("inverterbatterysoc");
+  inverterbatterysoc->set_object_id("inverterbatterysoc");
+  inverterbatterysoc->set_disabled_by_default(false);
+  inverterbatterysoc->set_internal(true);
+  inverterbatterysoc->set_accuracy_decimals(1);
+  inverterbatterysoc->set_force_update(false);
+  inverterbatterysoc->set_component_source("homeassistant.sensor");
+  App.register_component(inverterbatterysoc);
+  inverterbatterysoc->set_entity_id("sensor.inverter_battery");
   // sensor.aht10:
   //   platform: aht10
   //   address: 0x38
@@ -846,8 +868,8 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     drive_strength: 20.0
   //     inverted: false
+  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_3
   //   pin_b:
   //     number: 14
@@ -857,8 +879,8 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     drive_strength: 20.0
   //     inverted: false
+  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_4
   //   resolution: 2
   //   on_clockwise:
@@ -946,6 +968,22 @@ void setup() {
   forecastwethercondition->set_component_source("homeassistant.text_sensor");
   App.register_component(forecastwethercondition);
   forecastwethercondition->set_entity_id("input_text.forecast_condition");
+  // text_sensor.homeassistant:
+  //   platform: homeassistant
+  //   id: batterystate
+  //   entity_id: sensor.inverter_battery_state
+  //   internal: true
+  //   disabled_by_default: false
+  //   name: batterystate
+  batterystate = new homeassistant::HomeassistantTextSensor();
+  App.register_text_sensor(batterystate);
+  batterystate->set_name("batterystate");
+  batterystate->set_object_id("batterystate");
+  batterystate->set_disabled_by_default(false);
+  batterystate->set_internal(true);
+  batterystate->set_component_source("homeassistant.text_sensor");
+  App.register_component(batterystate);
+  batterystate->set_entity_id("sensor.inverter_battery_state");
   // display.tm1638:
   //   platform: tm1638
   //   id: tm1638_display
@@ -957,8 +995,8 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     drive_strength: 20.0
   //     inverted: false
+  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_5
   //   clk_pin:
   //     number: 22
@@ -968,8 +1006,8 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     drive_strength: 20.0
   //     inverted: false
+  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_6
   //   dio_pin:
   //     number: 23
@@ -979,8 +1017,8 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     drive_strength: 20.0
   //     inverted: false
+  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_7
   //   intensity: 5
   //   update_interval: 100ms
@@ -997,8 +1035,10 @@ void setup() {
   //     \ float current_temperature = -42; id(currenttemperature).state;\nstatic std::string
   //     \ wether_condition = \"unLo\"; id(wethercondition).state;\nstatic std::string
   //     \ forecast_wether_condition = \"unLo\"; id(forecastwethercondition).state;\n \n
-  //     \n\ncountdowntime = id(global_timer_seconds); \n countdown LEDs\nif(  countdowntime
-  //     \ > 0 and initConuntdownValue > 0 and j % 2 == 0)\n{\n   char str[32];\n   dtostrf(countdowntime/initConuntdownValue,
+  //     static int inverter_battery_soc = -42;\nstatic std::string battery_state = \"unLo\"
+  //     ; id(forecastwethercondition).state;\n \n\ncountdowntime = id(global_timer_seconds);
+  //     \ \n countdown LEDs\nif(  countdowntime > 0 and initConuntdownValue > 0 and j
+  //     \ % 2 == 0)\n{\n   char str[32];\n   dtostrf(countdowntime/initConuntdownValue,
   //     \ 8, 2, str);\n   ESP_LOGI(\"main\", str );\n  if (8 * countdowntime == 8 * initConuntdownValue)\n
   //     \  {\n    id(Led0).turn_on(); id(LedKitchenSoket).turn_on(); id(Led2).turn_on();
   //     \ id(Led3).turn_on();\n    id(Led4).turn_on(); id(Led5).turn_on();            id(Led6).turn_on();
@@ -1015,15 +1055,17 @@ void setup() {
   //     \ > 1 * initConuntdownValue and 8 * countdowntime < 2 * initConuntdownValue)\n 
   //     \       { id(Led2).turn_off(); }\n  else if( 8 * countdowntime > 0 * initConuntdownValue
   //     \ and 8 * countdowntime < 1 * initConuntdownValue)\n        { id(LedKitchenSoket).turn_off();
-  //     \ }\n}\n\n\nif ( i>15000 ){ i=0; }  \nif ( j>15000 ){ j=0; }  \n\nif (connectionToHAEstablished
+  //     \ }\n}\n\n\n\nif ( i>15000 ){ i=0; }  \nif ( j>15000 ){ j=0; }  \n\nif (connectionToHAEstablished
   //     \ == false and j % 50 == 0)\n{\n    if( id(synchwithhaled).state)\n    { connectionToHAEstablished
   //     \ = true; j = 2950; } \n}\n\n Get data form HA\nj++;\nif ( j % 3000 == 0 ) 
   //     \ get data from HA every 5 mins\n{\n  feel_like_temperature     = id(feelLiketemperature).state;
   //     \ \n  forecast_temperature      = id(forecasttemperature).state; \n  current_temperature
   //     \       = id(currenttemperature).state;\n  wether_condition          = id(wethercondition).state;
   //     \ \n  forecast_wether_condition = id(forecastwethercondition).state;\n  j=1;\n}\n
-  //     \nif (countdowntime == 0)\n{\n  if(id(kitchensoket).state) { id(LedKitchenSoket).turn_on();
-  //     \ }\n  else { id(LedKitchenSoket).turn_off(); }\n  \n  id(Led0).turn_off(); id(Led2).turn_off();
+  //     \nif ( j % 1000 == 0 )\n{\n  inverter_battery_soc      = id(inverterbatterysoc).state;\n
+  //     \  battery_state             = id(batterystate).state;\n}\n\nif (countdowntime ==
+  //     \ 0 )\n{\n  if(id(kitchensoket).state) { id(LedKitchenSoket).turn_on(); }\n  else
+  //     \ { id(LedKitchenSoket).turn_off(); }\n  \n  id(Led0).turn_off(); id(Led2).turn_off();
   //     \ id(Led3).turn_off(); id(Led4).turn_off();\n  id(Led5).turn_off(); id(Led7).turn_off();
   //     \ \n}\n\n switch frame\n\n       next frame\nif ( \n         id(next_frame).state
   //     \ \n    and next_frame_button_released   \n   ) \n{\n  it.printf(0, \"        \"
@@ -1041,17 +1083,17 @@ void setup() {
   //     \ { id(gasdetectedled).turn_on(); } \n else { id(gasdetectedled).turn_off(); }\n
   //     \n set timer adjustment\nif (id(set_timer_adjustment).state) {id(glogal_timer_adjustment)
   //     \ = 0;}\nif (id(glogal_timer_adjustment) != 0 and i%10 == 0) {id(glogal_timer_adjustment)--;}
-  //     \ \n\n synch with HA indicator\nif (countdowntime == 0)\n{\n  if (i%150==0 ) \n
-  //     \  { \n      if ( id(synchwithhaled).state ) { exist_conntction_to_ha = true; }\n
-  //     \      else { exist_conntction_to_ha = false; }\n  }\n  if (exist_conntction_to_ha
-  //     \ == true and i%50 == 0) { id(Led6).turn_on(); }\n  else { id(Led6).turn_off();
-  //     \ }\n\n  if (id(acsensor).state) \n  { id(Led0).turn_on(); }\n  else { id(Led0).turn_off();
-  //     \ } \n}\n\n GAS alarm\nif (id(gasdetectedbinary).state) {gas_alart = true;}\n
-  //      if (id(reset_gas_alarm).state) {gas_alart = false;}\n\nif (!gas_alart)\n{\n 
-  //     \  COUNTDOWN\n  if (id(timer1minute).state   ) {countdowntime = 60;     it.printf(0,
-  //     \ \"        \" );}      \n  if (id(timer3minutes).state  ) {countdowntime = 3*60;
-  //     \   it.printf(0, \"        \" );}      \n  if (id(timer5minutes).state  ) {countdowntime
-  //     \ = 5*60;   it.printf(0, \"        \" );}      \n  if (id(timer10minutes).state
+  //     \ \n\n synch with HA indicator\nif (countdowntime == 0)\n{\n   if (i % 150==0
+  //     \ ) \n   { \n       if ( id(synchwithhaled).state ) { exist_conntction_to_ha
+  //     \ = true; }\n       else { exist_conntction_to_ha = false; }\n   }\n   if
+  //     \ (exist_conntction_to_ha == true and i%50 == 0) { id(Led6).turn_on(); }\n   else
+  //     \ { id(Led6).turn_off(); }\n\n  if (id(acsensor).state) \n  { id(Led0).turn_on();
+  //     \ }\n  else { id(Led0).turn_off(); } \n}\n\n GAS alarm\nif (id(gasdetectedbinary).state)
+  //     \ {gas_alart = true;}\n if (id(reset_gas_alarm).state) {gas_alart = false;}\n\n
+  //     if (!gas_alart)\n{\n   COUNTDOWN\n  if (id(timer1minute).state   ) {countdowntime
+  //     \ = 60;     it.printf(0, \"        \" );}      \n  if (id(timer3minutes).state 
+  //     \ ) {countdowntime = 3*60;   it.printf(0, \"        \" );}      \n  if (id(timer5minutes).state
+  //     \  ) {countdowntime = 5*60;   it.printf(0, \"        \" );}      \n  if (id(timer10minutes).state
   //     \ ) {countdowntime = 10*60;  it.printf(0, \"        \" );}      \n  if (id(timer15minutes).state
   //     \ ) {countdowntime = 15*60;  it.printf(0, \"        \" );}      \n  if (countdowntime
   //     \ != 0 and i%2 == 0 )\n  {\n    it.printf(0, \"        \" );\n    it.printf(0, \"
@@ -1108,17 +1150,32 @@ void setup() {
   //     \ (i == 6 * fraimtime)\n    {\n      it.printf(0, \"        \" );  clean screen\n
   //     \      it.printf(0, \"t %.f\", id(internal_temperature).state); \n      it.printf(4,
   //     \ \"h %.f\", id(internal_humidity).state); \n    }\n    else if (i == 7 * fraimtime)\n
-  //     \    {\n      it.printf(0, \"        \" );\n      it.printf(0, \"PrS \"); \n   
-  //     \   it.printf(4, \"%.1f\", id(air_preasure).state); \n      \n       dtostrf(id(internal_temperature2).state,
-  //     \ 8, 2, str);\n       ESP_LOGI(\"main\", str );\n    }\n    else if (i == 8 *
-  //     \ fraimtime)\n    {\n       it.printf(0, \"        \" );\n       it.printf(0,
-  //     \ \"GAS \" ); \n       it.printf(4, \"%.2f\", id(gasdetectorv).state); \n    }\n
-  //     \  }\n}\nelse  if gas detected\n{\n   if ( i%40<20 ) \n   { \n     it.printf(0,
-  //     \ \"GAS \" ); \n     it.printf(4, \"%.2f\", id(gasdetectorv).state); \n    
-  //     \ id(gasdetectedled).turn_on();\n   }\n   else \n   { \n     it.printf(0,
-  //     \ \"    \" ); \n     it.printf(4, \"%.2f \", id(gasdetectorv).state); \n   
-  //     \  id(gasdetectedled).turn_off();\n   }\n}\n\ni++;\nid(global_timer_seconds) =
-  //     \ countdowntime;\nif (i> 8 * fraimtime) {i=0;}  Number of fraims +1"
+  //     \    {\n      if (battery_state == \"discharging\" or  battery_state == \"charging\"
+  //     )\n      {\n        it.printf(0, \"        \" );\n        it.printf(0, \"deye\"
+  //     ); \n        it.printf(4, \"%d\", inverter_battery_soc); \n      }\n      else \n
+  //     \      {\n        it.printf(0, \"        \" );\n        it.printf(0, \"PrS \");
+  //     \ \n        it.printf(4, \"%.1f\", id(air_preasure).state); \n      }\n      \n
+  //     \       dtostrf(id(internal_temperature2).state, 8, 2, str);\n       ESP_LOGI(\"
+  //     main\", str );\n\n    }\n    else if (i == 8 * fraimtime)\n    {\n       it.printf(0,
+  //     \ \"        \" );\n       it.printf(0, \"GAS \" ); \n       it.printf(4, \"
+  //     %.2f\", id(gasdetectorv).state); \n    }\n  }\n}\nelse  if gas detected\n{\n 
+  //     \  if ( i%40<20 ) \n   { \n     it.printf(0, \"GAS \" ); \n     it.printf(4,
+  //     \ \"%.2f\", id(gasdetectorv).state); \n     id(gasdetectedled).turn_on();\n  
+  //     \ }\n   else \n   { \n     it.printf(0, \"    \" ); \n     it.printf(4,
+  //     \ \"%.2f \", id(gasdetectorv).state); \n     id(gasdetectedled).turn_off();\n
+  //     \   }\n}\n\nif (\n      (battery_state == \"discharging\" or  battery_state ==
+  //     \ \"charging\")  \n      and countdowntime == 0 \n   )\n{\n  if (battery_state ==
+  //     \ \"charging\" )\n    {\n      if ((i-10) % 40 + 10 == 40) { id(Led5).turn_off();
+  //     \ id(Led6).turn_off(); id(Led7).turn_off(); }\n      if ((i-10) % 40 + 10 == 30)
+  //     \ { id(Led5).turn_on(); id(Led6).turn_on(); id(Led7).turn_on(); }\n      if ((i-10)
+  //     \ % 40 + 10 == 20) { id(Led5).turn_on(); id(Led6).turn_on(); }\n      if ((i-10)
+  //     \ % 40 + 10 == 10) { id(Led5).turn_on(); }\n    } \n\n    if(battery_state == \"
+  //     discharging\" )\n    {\n      if ((i-10) % 40 + 10 == 40) { id(Led5).turn_off();
+  //     \ id(Led6).turn_off(); id(Led7).turn_off();  }\n      if ((i-10) % 40 + 10 == 30)
+  //     \ { id(Led7).turn_off(); id(Led6).turn_off(); }\n      if ((i-10) % 40 + 10 == 20)
+  //     \ { id(Led7).turn_off();  }\n      if ((i-10) % 40 + 10 == 10) { id(Led5).turn_on();
+  //     \ id(Led6).turn_on(); id(Led7).turn_on(); }\n    }\n}\n\ni++;\nid(global_timer_seconds)
+  //     \ = countdowntime;\nif (i> 8 * fraimtime) {i=0;}  Number of fraims +1"
   tm1638_display = new tm1638::TM1638Component();
   tm1638_display->set_update_interval(100);
   tm1638_display->set_component_source("tm1638.display");
@@ -1187,7 +1244,7 @@ void setup() {
   global_init_timer_seconds->set_component_source("globals");
   App.register_component(global_init_timer_seconds);
   tm1638_display->set_writer([=](tm1638::TM1638Component & it) -> void {
-      #line 293 "air-player3.yaml"
+      #line 300 "air-player4.yaml"
        
        
        
@@ -1211,7 +1268,9 @@ void setup() {
       static std::string wether_condition = "unLo";  
       static std::string forecast_wether_condition = "unLo";  
        
-      
+      static int inverter_battery_soc = -42;
+      static std::string battery_state = "unLo";  
+       
       
       countdowntime = global_timer_seconds->value(); 
        
@@ -1243,6 +1302,7 @@ void setup() {
       }
       
       
+      
       if ( i>15000 ){ i=0; }  
       if ( j>15000 ){ j=0; }  
       
@@ -1264,7 +1324,13 @@ void setup() {
         j=1;
       }
       
-      if (countdowntime == 0)
+      if ( j % 1000 == 0 )
+      {
+        inverter_battery_soc      = inverterbatterysoc->state;
+        battery_state             = batterystate->state;
+      }
+      
+      if (countdowntime == 0 )
       {
         if(kitchensoket->state) { LedKitchenSoket->turn_on(); }
         else { LedKitchenSoket->turn_off(); }
@@ -1325,13 +1391,13 @@ void setup() {
        
       if (countdowntime == 0)
       {
-        if (i%150==0 ) 
-        { 
-            if ( synchwithhaled->state ) { exist_conntction_to_ha = true; }
-            else { exist_conntction_to_ha = false; }
-        }
-        if (exist_conntction_to_ha == true and i%50 == 0) { Led6->turn_on(); }
-        else { Led6->turn_off(); }
+         
+         
+         
+         
+         
+         
+         
       
         if (acsensor->state) 
         { Led0->turn_on(); }
@@ -1449,12 +1515,22 @@ void setup() {
           }
           else if (i == 7 * fraimtime)
           {
-            it.printf(0, "        " );
-            it.printf(0, "PrS "); 
-            it.printf(4, "%.1f", air_preasure->state); 
+            if (battery_state == "discharging" or  battery_state == "charging")
+            {
+              it.printf(0, "        " );
+              it.printf(0, "deye"); 
+              it.printf(4, "%d", inverter_battery_soc); 
+            }
+            else 
+            {
+              it.printf(0, "        " );
+              it.printf(0, "PrS "); 
+              it.printf(4, "%.1f", air_preasure->state); 
+            }
             
              
              
+      
           }
           else if (i == 8 * fraimtime)
           {
@@ -1480,18 +1556,40 @@ void setup() {
          
       }
       
+      if (
+            (battery_state == "discharging" or  battery_state == "charging")  
+            and countdowntime == 0 
+         )
+      {
+        if (battery_state == "charging" )
+          {
+            if ((i-10) % 40 + 10 == 40) { Led5->turn_off(); Led6->turn_off(); Led7->turn_off(); }
+            if ((i-10) % 40 + 10 == 30) { Led5->turn_on(); Led6->turn_on(); Led7->turn_on(); }
+            if ((i-10) % 40 + 10 == 20) { Led5->turn_on(); Led6->turn_on(); }
+            if ((i-10) % 40 + 10 == 10) { Led5->turn_on(); }
+          } 
+      
+          if(battery_state == "discharging" )
+          {
+            if ((i-10) % 40 + 10 == 40) { Led5->turn_off(); Led6->turn_off(); Led7->turn_off();  }
+            if ((i-10) % 40 + 10 == 30) { Led7->turn_off(); Led6->turn_off(); }
+            if ((i-10) % 40 + 10 == 20) { Led7->turn_off();  }
+            if ((i-10) % 40 + 10 == 10) { Led5->turn_on(); Led6->turn_on(); Led7->turn_on(); }
+          }
+      }
+      
       i++;
       global_timer_seconds->value() = countdowntime;
       if (i> 8 * fraimtime) {i=0;}  
   });
   timer_is_active->set_template([=]() -> optional<bool> {
-      #line 144 "air-player3.yaml"
+      #line 144 "air-player4.yaml"
        
       if (global_timer_seconds->value() != 0 ) { return true; } 
       else { return false; }
   });
   lambdaaction = new LambdaAction<>([=]() -> void {
-      #line 244 "air-player3.yaml"
+      #line 248 "air-player4.yaml"
       global_timer_seconds->value() = global_timer_seconds->value() + (30 - global_timer_seconds->value()%30) ;
       glogal_timer_adjustment->value() = 3;
   });
@@ -1499,7 +1597,7 @@ void setup() {
   rotary_encoder_rotaryencoderanticlockwisetrigger = new rotary_encoder::RotaryEncoderAnticlockwiseTrigger(rotary_encoder_rotaryencodersensor);
   automation_2 = new Automation<>(rotary_encoder_rotaryencoderanticlockwisetrigger);
   lambdaaction_2 = new LambdaAction<>([=]() -> void {
-      #line 248 "air-player3.yaml"
+      #line 252 "air-player4.yaml"
       if ( global_timer_seconds->value() >= 30 )
       { 
         if (global_timer_seconds->value()%30 != 0 )
