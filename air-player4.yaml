@@ -376,7 +376,7 @@ display:
       j=1;
     }
 
-    if ( j % 1000 == 0 )
+    if ( j % 1200 == 0 ) // 2 mins
     {
       inverter_battery_soc      = id(inverterbatterysoc).state;
       battery_state             = id(batterystate).state;
