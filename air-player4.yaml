@@ -323,7 +323,10 @@ display:
     static int inverter_battery_soc = -42;
     static std::string battery_state = "unLo"; //id(forecastwethercondition).state;
      
-   
+    static int v = 40; // delete this 
+    static int batt_frame = -42; // delete this 
+
+
     countdowntime = id(global_timer_seconds); 
     // countdown LEDs
     if(  countdowntime > 0 and initConuntdownValue > 0 and j % 2 == 0)
@@ -376,7 +379,7 @@ display:
       j=1;
     }
 
-    if ( j % 1200 == 0 ) // 2 mins
+    if ( j % 600 == 0 ) // 1 mins
     {
       inverter_battery_soc      = id(inverterbatterysoc).state;
       battery_state             = id(batterystate).state;
@@ -384,11 +387,11 @@ display:
 
     if (countdowntime == 0 )
     {
-      id(Led0).turn_off(); id(Led2).turn_off(); id(Led3).turn_off(); id(Led4).turn_off();
+      id(Led0).turn_off(); id(Led2).turn_off(); id(Led3).turn_off(); 
 
       if  ( !(battery_state == "discharging" or battery_state == "charging"))  
       {
-        id(Led5).turn_off(); id(Led6).turn_off(); id(Led7).turn_off(); 
+        id(Led4).turn_off(); id(Led5).turn_off(); id(Led6).turn_off(); id(Led7).turn_off(); 
       }
 
       if (id(acsensor).state) 
@@ -558,8 +561,8 @@ display:
           if (battery_state == "discharging" or  battery_state == "charging")
           {
             it.printf(0, "        " );
-            it.printf(0, "deye"); 
-            it.printf(4, " %d", inverter_battery_soc); 
+            it.printf(0, "bAtt"); 
+            it.printf(5, "%d", inverter_battery_soc); 
           }
           else 
           {
@@ -595,27 +598,53 @@ display:
       //   id(gasdetectedled).turn_off();
       // }
     }
-
+   
     if (
-          (battery_state == "discharging" or  battery_state == "charging")  
+          (battery_state == "discharging" or  battery_state == "charging" )  
           and countdowntime == 0 
        )
     {
+      // v=60;
+      batt_frame = (i-10) % 70 + 10;
       if (battery_state == "charging" )
-        {
-          if ((i-10) % 40 + 10 == 40) { id(Led5).turn_off(); id(Led6).turn_off(); id(Led7).turn_off(); }
-          if ((i-10) % 40 + 10 == 30) { id(Led5).turn_on();  id(Led6).turn_on();  id(Led7).turn_on(); }
-          if ((i-10) % 40 + 10 == 20) { id(Led5).turn_on();  id(Led6).turn_on(); }
-          if ((i-10) % 40 + 10 == 10) { id(Led5).turn_on(); }
-        } 
+      {
+          if ( batt_frame == 10 ) { id(Led4).turn_off(); id(Led5).turn_off(); id(Led6).turn_off(); id(Led7).turn_off(); }
+          if ( batt_frame == 20 ) { id(Led4).turn_on(); }
+          if ( batt_frame == 30 ) { id(Led4).turn_on();  id(Led5).turn_on();  }
+          if ( batt_frame == 40 ) { id(Led4).turn_on();  id(Led5).turn_on();  id(Led6).turn_on(); }
+          if ( batt_frame == 50 ) { id(Led4).turn_on();  id(Led5).turn_on();  id(Led6).turn_on();  id(Led7).turn_on();  }
+          if ( batt_frame == 60 ) { id(Led4).turn_off(); id(Led5).turn_off(); id(Led6).turn_off(); id(Led7).turn_off(); }
+          if ( batt_frame == 70 ) { 
+                if ( inverter_battery_soc >= 75)   { id(Led4).turn_on(); id(Led5).turn_on();  id(Led6).turn_on();   id(Led7).turn_on();  } 
+                if ( inverter_battery_soc >= 50 
+                    and inverter_battery_soc < 75
+                   )                               { id(Led4).turn_on(); id(Led5).turn_on();  id(Led6).turn_on();   id(Led7).turn_off(); }
+                if ( inverter_battery_soc >= 25 
+                    and inverter_battery_soc < 50
+                   )                               { id(Led4).turn_on(); id(Led5).turn_on();  id(Led6).turn_off();  id(Led7).turn_off(); } 
+                if ( inverter_battery_soc <  25 )  { id(Led4).turn_on(); id(Led5).turn_off(); id(Led6).turn_off();  id(Led7).turn_off(); }
+              }
+      } 
 
-        if(battery_state == "discharging" )
-        {
-          if ((i-10) % 40 + 10 == 40) { id(Led5).turn_off(); id(Led6).turn_off(); id(Led7).turn_off();  }
-          if ((i-10) % 40 + 10 == 30) { id(Led7).turn_off(); id(Led6).turn_off(); }
-          if ((i-10) % 40 + 10 == 20) { id(Led7).turn_off();  }
-          if ((i-10) % 40 + 10 == 10) { id(Led5).turn_on(); id(Led6).turn_on(); id(Led7).turn_on(); }
-        }
+      if (battery_state == "discharging" )
+      {
+          if ( batt_frame == 10 ) { id(Led7).turn_on(); id(Led6).turn_on(); id(Led5).turn_on(); id(Led4).turn_on(); }
+          if ( batt_frame == 20 ) { id(Led7).turn_off();  }
+          if ( batt_frame == 30 ) { id(Led7).turn_off(); id(Led6).turn_off(); }
+          if ( batt_frame == 40 ) { id(Led7).turn_off(); id(Led6).turn_off(); id(Led5).turn_off();  }
+          if ( batt_frame == 50 ) { id(Led7).turn_off(); id(Led6).turn_off(); id(Led5).turn_off(); id(Led4).turn_off(); }
+          if ( batt_frame == 60 ) { 
+                if ( inverter_battery_soc >= 75)   { id(Led4).turn_on(); id(Led5).turn_on();  id(Led6).turn_on();   id(Led7).turn_on();  } 
+                if ( inverter_battery_soc >= 50 
+                    and inverter_battery_soc < 75
+                   )                               { id(Led4).turn_on(); id(Led5).turn_on();  id(Led6).turn_on();   id(Led7).turn_off(); }
+                if ( inverter_battery_soc >= 25 
+                    and inverter_battery_soc < 50
+                   )                               { id(Led4).turn_on(); id(Led5).turn_on();  id(Led6).turn_off();  id(Led7).turn_off(); } 
+                if ( inverter_battery_soc <  25 )  { id(Led4).turn_on(); id(Led5).turn_off(); id(Led6).turn_off();  id(Led7).turn_off(); }
+              }
+          if ( batt_frame == 70 ) { id(Led7).turn_off(); id(Led6).turn_off(); id(Led5).turn_off(); id(Led4).turn_off(); }   
+      }
     }
 
     i++;

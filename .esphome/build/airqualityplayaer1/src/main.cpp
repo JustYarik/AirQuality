@@ -489,8 +489,8 @@ void setup() {
   //       open_drain: false
   //       pulldown: false
   //     inverted: true
-  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin
+  //     drive_strength: 20.0
   //   disabled_by_default: false
   gasdetectedbinary = new gpio::GPIOBinarySensor();
   App.register_binary_sensor(gasdetectedbinary);
@@ -518,8 +518,8 @@ void setup() {
   //       open_drain: false
   //       pulldown: false
   //     inverted: true
-  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_2
+  //     drive_strength: 20.0
   //   disabled_by_default: false
   set_timer_adjustment = new gpio::GPIOBinarySensor();
   App.register_binary_sensor(set_timer_adjustment);
@@ -868,9 +868,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_3
   //     inverted: false
+  //     drive_strength: 20.0
   //   pin_b:
   //     number: 14
   //     mode:
@@ -879,9 +879,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_4
   //     inverted: false
+  //     drive_strength: 20.0
   //   resolution: 2
   //   on_clockwise:
   //   - then:
@@ -995,9 +995,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_5
   //     inverted: false
+  //     drive_strength: 20.0
   //   clk_pin:
   //     number: 22
   //     mode:
@@ -1006,9 +1006,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_6
   //     inverted: false
+  //     drive_strength: 20.0
   //   dio_pin:
   //     number: 23
   //     mode:
@@ -1017,9 +1017,9 @@ void setup() {
   //       open_drain: false
   //       pullup: false
   //       pulldown: false
-  //     drive_strength: 20.0
   //     id: esp32_esp32internalgpiopin_7
   //     inverted: false
+  //     drive_strength: 20.0
   //   intensity: 5
   //   update_interval: 100ms
   //   lambda: !lambda " char str[32];\n dtostrf(i, 8, 2, str);\n ESP_LOGI(\"main\"
@@ -1036,7 +1036,8 @@ void setup() {
   //     \ wether_condition = \"unLo\"; id(wethercondition).state;\nstatic std::string
   //     \ forecast_wether_condition = \"unLo\"; id(forecastwethercondition).state;\n \n
   //     static int inverter_battery_soc = -42;\nstatic std::string battery_state = \"unLo\"
-  //     ; id(forecastwethercondition).state;\n \n\ncountdowntime = id(global_timer_seconds);
+  //     ; id(forecastwethercondition).state;\n \nstatic int v = 40;  delete this \n
+  //     static int batt_frame = -42;  delete this \n\n\ncountdowntime = id(global_timer_seconds);
   //     \ \n countdown LEDs\nif(  countdowntime > 0 and initConuntdownValue > 0 and j
   //     \ % 2 == 0)\n{\n   char str[32];\n   dtostrf(countdowntime/initConuntdownValue,
   //     \ 8, 2, str);\n   ESP_LOGI(\"main\", str );\n  if (8 * countdowntime == 8 * initConuntdownValue)\n
@@ -1062,12 +1063,12 @@ void setup() {
   //     \ \n  forecast_temperature      = id(forecasttemperature).state; \n  current_temperature
   //     \       = id(currenttemperature).state;\n  wether_condition          = id(wethercondition).state;
   //     \ \n  forecast_wether_condition = id(forecastwethercondition).state;\n  j=1;\n}\n
-  //     \nif ( j % 1200 == 0 )  2 mins\n{\n  inverter_battery_soc      = id(inverterbatterysoc).state;\n
+  //     \nif ( j % 600 == 0 )  1 mins\n{\n  inverter_battery_soc      = id(inverterbatterysoc).state;\n
   //     \  battery_state             = id(batterystate).state;\n}\n\nif (countdowntime ==
-  //     \ 0 )\n{\n  id(Led0).turn_off(); id(Led2).turn_off(); id(Led3).turn_off(); id(Led4).turn_off();\n
-  //     \n  if  ( !(battery_state == \"discharging\" or battery_state == \"charging\"))
-  //     \  \n  {\n    id(Led5).turn_off(); id(Led6).turn_off(); id(Led7).turn_off(); \n
-  //     \  }\n\n  if (id(acsensor).state) \n  { id(Led0).turn_on(); }\n  else { id(Led0).turn_off();
+  //     \ 0 )\n{\n  id(Led0).turn_off(); id(Led2).turn_off(); id(Led3).turn_off(); \n\n
+  //     \  if  ( !(battery_state == \"discharging\" or battery_state == \"charging\")) 
+  //     \ \n  {\n    id(Led4).turn_off(); id(Led5).turn_off(); id(Led6).turn_off(); id(Led7).turn_off();
+  //     \ \n  }\n\n  if (id(acsensor).state) \n  { id(Led0).turn_on(); }\n  else { id(Led0).turn_off();
   //     \ } \n\n  if(id(kitchensoket).state) { id(LedKitchenSoket).turn_on(); }\n  else
   //     \ { id(LedKitchenSoket).turn_off(); } \n  \n}\n\n switch frame\n       next
   //     \ frame\nif ( \n         id(next_frame).state \n    and next_frame_button_released
@@ -1146,10 +1147,10 @@ void setup() {
   //     \      it.printf(0, \"t %.f\", id(internal_temperature).state); \n      it.printf(4,
   //     \ \"h %.f\", id(internal_humidity).state); \n    }\n    else if (i == 7 * fraimtime)\n
   //     \    {\n      if (battery_state == \"discharging\" or  battery_state == \"charging\"
-  //     )\n      {\n        it.printf(0, \"        \" );\n        it.printf(0, \"deye\"
-  //     ); \n        it.printf(4, \" %d\", inverter_battery_soc); \n      }\n      else
-  //     \ \n      {\n        it.printf(0, \"        \" );\n        it.printf(0, \"PrS \"
-  //     ); \n        it.printf(4, \"%.1f\", id(air_preasure).state); \n      }\n      \n
+  //     )\n      {\n        it.printf(0, \"        \" );\n        it.printf(0, \"bAtt\"
+  //     ); \n        it.printf(5, \"%d\", inverter_battery_soc); \n      }\n      else \n
+  //     \      {\n        it.printf(0, \"        \" );\n        it.printf(0, \"PrS \");
+  //     \ \n        it.printf(4, \"%.1f\", id(air_preasure).state); \n      }\n      \n
   //     \       dtostrf(id(internal_temperature2).state, 8, 2, str);\n       ESP_LOGI(\"
   //     main\", str );\n\n    }\n    else if (i == 8 * fraimtime)\n    {\n       it.printf(0,
   //     \ \"        \" );\n       it.printf(0, \"GAS \" ); \n       it.printf(4, \"
@@ -1159,18 +1160,40 @@ void setup() {
   //     \ }\n   else \n   { \n     it.printf(0, \"    \" ); \n     it.printf(4,
   //     \ \"%.2f \", id(gasdetectorv).state); \n     id(gasdetectedled).turn_off();\n
   //     \   }\n}\n\nif (\n      (battery_state == \"discharging\" or  battery_state ==
-  //     \ \"charging\")  \n      and countdowntime == 0 \n   )\n{\n  if (battery_state ==
-  //     \ \"charging\" )\n    {\n      if ((i-10) % 40 + 10 == 40) { id(Led5).turn_off();
-  //     \ id(Led6).turn_off(); id(Led7).turn_off(); }\n      if ((i-10) % 40 + 10 == 30)
-  //     \ { id(Led5).turn_on();  id(Led6).turn_on();  id(Led7).turn_on(); }\n      if ((i-10)
-  //     \ % 40 + 10 == 20) { id(Led5).turn_on();  id(Led6).turn_on(); }\n      if ((i-10)
-  //     \ % 40 + 10 == 10) { id(Led5).turn_on(); }\n    } \n\n    if(battery_state == \"
-  //     discharging\" )\n    {\n      if ((i-10) % 40 + 10 == 40) { id(Led5).turn_off();
-  //     \ id(Led6).turn_off(); id(Led7).turn_off();  }\n      if ((i-10) % 40 + 10 == 30)
-  //     \ { id(Led7).turn_off(); id(Led6).turn_off(); }\n      if ((i-10) % 40 + 10 == 20)
-  //     \ { id(Led7).turn_off();  }\n      if ((i-10) % 40 + 10 == 10) { id(Led5).turn_on();
-  //     \ id(Led6).turn_on(); id(Led7).turn_on(); }\n    }\n}\n\ni++;\nid(global_timer_seconds)
-  //     \ = countdowntime;\nif (i> 8 * fraimtime) {i=0;}  Number of fraims +1"
+  //     \ \"charging\" )  \n      and countdowntime == 0 \n   )\n{\n   v=60;\n  batt_frame
+  //     \ = (i-10) % 70 + 10;\n  if (battery_state == \"charging\" )\n  {\n      if ( batt_frame
+  //     \ == 10 ) { id(Led4).turn_off(); id(Led5).turn_off(); id(Led6).turn_off(); id(Led7).turn_off();
+  //     \ }\n      if ( batt_frame == 20 ) { id(Led4).turn_on(); }\n      if ( batt_frame
+  //     \ == 30 ) { id(Led4).turn_on();  id(Led5).turn_on();  }\n      if ( batt_frame ==
+  //     \ 40 ) { id(Led4).turn_on();  id(Led5).turn_on();  id(Led6).turn_on(); }\n     
+  //     \ if ( batt_frame == 50 ) { id(Led4).turn_on();  id(Led5).turn_on();  id(Led6).turn_on();
+  //     \  id(Led7).turn_on();  }\n      if ( batt_frame == 60 ) { id(Led4).turn_off();
+  //     \ id(Led5).turn_off(); id(Led6).turn_off(); id(Led7).turn_off(); }\n      if ( batt_frame
+  //     \ == 70 ) { \n            if ( inverter_battery_soc >= 75)            { id(Led4).turn_on();
+  //     \ id(Led5).turn_on();  id(Led6).turn_on();   id(Led7).turn_on();  } \n         
+  //     \   if ( inverter_battery_soc >= 50 and inverter_battery_soc < 75) { id(Led4).turn_on();
+  //     \ id(Led5).turn_on();  id(Led6).turn_on();   id(Led7).turn_off(); }\n          
+  //     \  if ( inverter_battery_soc >= 25 and inverter_battery_soc < 50) { id(Led4).turn_on();
+  //     \ id(Led5).turn_on();  id(Led6).turn_off();  id(Led7).turn_off(); } \n         
+  //     \   if ( inverter_battery_soc <  25 )           { id(Led4).turn_on(); id(Led5).turn_off();
+  //     \ id(Led6).turn_off();  id(Led7).turn_off(); }\n          }\n  } \n\n  if (battery_state
+  //     \ == \"discharging\" )\n  {\n      if ( batt_frame == 10 ) { id(Led7).turn_on();
+  //     \ id(Led6).turn_on(); id(Led5).turn_on(); id(Led4).turn_on(); }\n      if ( batt_frame
+  //     \ == 20 ) { id(Led7).turn_off();  }\n      if ( batt_frame == 30 ) { id(Led7).turn_off();
+  //     \ id(Led6).turn_off(); }\n      if ( batt_frame == 40 ) { id(Led7).turn_off(); id(Led6).turn_off();
+  //     \ id(Led5).turn_off();  }\n      if ( batt_frame == 50 ) { id(Led7).turn_off();
+  //     \ id(Led6).turn_off(); id(Led5).turn_off(); id(Led4).turn_off(); }\n      if ( batt_frame
+  //     \ == 60 ) { \n            if ( inverter_battery_soc >= 75)            { id(Led4).turn_on();
+  //     \ id(Led5).turn_on();  id(Led6).turn_on();   id(Led7).turn_on();  } \n         
+  //     \   if ( inverter_battery_soc >= 50 and inverter_battery_soc < 75) { id(Led4).turn_on();
+  //     \ id(Led5).turn_on();  id(Led6).turn_on();   id(Led7).turn_off(); }\n          
+  //     \  if ( inverter_battery_soc >= 25 and inverter_battery_soc < 50) { id(Led4).turn_on();
+  //     \ id(Led5).turn_on();  id(Led6).turn_off();  id(Led7).turn_off(); } \n         
+  //     \   if ( inverter_battery_soc <  25 )           { id(Led4).turn_on(); id(Led5).turn_off();
+  //     \ id(Led6).turn_off();  id(Led7).turn_off(); }\n          }\n      if ( batt_frame
+  //     \ == 70 ) { id(Led7).turn_off(); id(Led6).turn_off(); id(Led5).turn_off(); id(Led4).turn_off();
+  //     \ }   \n  }\n}\n\ni++;\nid(global_timer_seconds) = countdowntime;\nif (i> 8 * fraimtime)
+  //     \ {i=0;}  Number of fraims +1"
   tm1638_display = new tm1638::TM1638Component();
   tm1638_display->set_update_interval(100);
   tm1638_display->set_component_source("tm1638.display");
@@ -1266,6 +1289,9 @@ void setup() {
       static int inverter_battery_soc = -42;
       static std::string battery_state = "unLo";  
        
+      static int v = 40;  
+      static int batt_frame = -42;  
+      
       
       countdowntime = global_timer_seconds->value(); 
        
@@ -1319,7 +1345,7 @@ void setup() {
         j=1;
       }
       
-      if ( j % 1200 == 0 )  
+      if ( j % 600 == 0 )  
       {
         inverter_battery_soc      = inverterbatterysoc->state;
         battery_state             = batterystate->state;
@@ -1327,11 +1353,11 @@ void setup() {
       
       if (countdowntime == 0 )
       {
-        Led0->turn_off(); Led2->turn_off(); Led3->turn_off(); Led4->turn_off();
+        Led0->turn_off(); Led2->turn_off(); Led3->turn_off(); 
       
         if  ( !(battery_state == "discharging" or battery_state == "charging"))  
         {
-          Led5->turn_off(); Led6->turn_off(); Led7->turn_off(); 
+          Led4->turn_off(); Led5->turn_off(); Led6->turn_off(); Led7->turn_off(); 
         }
       
         if (acsensor->state) 
@@ -1501,8 +1527,8 @@ void setup() {
             if (battery_state == "discharging" or  battery_state == "charging")
             {
               it.printf(0, "        " );
-              it.printf(0, "deye"); 
-              it.printf(4, " %d", inverter_battery_soc); 
+              it.printf(0, "bAtt"); 
+              it.printf(5, "%d", inverter_battery_soc); 
             }
             else 
             {
@@ -1540,25 +1566,43 @@ void setup() {
       }
       
       if (
-            (battery_state == "discharging" or  battery_state == "charging")  
+            (battery_state == "discharging" or  battery_state == "charging" )  
             and countdowntime == 0 
          )
       {
+         
+        batt_frame = (i-10) % 70 + 10;
         if (battery_state == "charging" )
-          {
-            if ((i-10) % 40 + 10 == 40) { Led5->turn_off(); Led6->turn_off(); Led7->turn_off(); }
-            if ((i-10) % 40 + 10 == 30) { Led5->turn_on();  Led6->turn_on();  Led7->turn_on(); }
-            if ((i-10) % 40 + 10 == 20) { Led5->turn_on();  Led6->turn_on(); }
-            if ((i-10) % 40 + 10 == 10) { Led5->turn_on(); }
-          } 
+        {
+            if ( batt_frame == 10 ) { Led4->turn_off(); Led5->turn_off(); Led6->turn_off(); Led7->turn_off(); }
+            if ( batt_frame == 20 ) { Led4->turn_on(); }
+            if ( batt_frame == 30 ) { Led4->turn_on();  Led5->turn_on();  }
+            if ( batt_frame == 40 ) { Led4->turn_on();  Led5->turn_on();  Led6->turn_on(); }
+            if ( batt_frame == 50 ) { Led4->turn_on();  Led5->turn_on();  Led6->turn_on();  Led7->turn_on();  }
+            if ( batt_frame == 60 ) { Led4->turn_off(); Led5->turn_off(); Led6->turn_off(); Led7->turn_off(); }
+            if ( batt_frame == 70 ) { 
+                  if ( inverter_battery_soc >= 75)            { Led4->turn_on(); Led5->turn_on();  Led6->turn_on();   Led7->turn_on();  } 
+                  if ( inverter_battery_soc >= 50 and inverter_battery_soc < 75) { Led4->turn_on(); Led5->turn_on();  Led6->turn_on();   Led7->turn_off(); }
+                  if ( inverter_battery_soc >= 25 and inverter_battery_soc < 50) { Led4->turn_on(); Led5->turn_on();  Led6->turn_off();  Led7->turn_off(); } 
+                  if ( inverter_battery_soc <  25 )           { Led4->turn_on(); Led5->turn_off(); Led6->turn_off();  Led7->turn_off(); }
+                }
+        } 
       
-          if(battery_state == "discharging" )
-          {
-            if ((i-10) % 40 + 10 == 40) { Led5->turn_off(); Led6->turn_off(); Led7->turn_off();  }
-            if ((i-10) % 40 + 10 == 30) { Led7->turn_off(); Led6->turn_off(); }
-            if ((i-10) % 40 + 10 == 20) { Led7->turn_off();  }
-            if ((i-10) % 40 + 10 == 10) { Led5->turn_on(); Led6->turn_on(); Led7->turn_on(); }
-          }
+        if (battery_state == "discharging" )
+        {
+            if ( batt_frame == 10 ) { Led7->turn_on(); Led6->turn_on(); Led5->turn_on(); Led4->turn_on(); }
+            if ( batt_frame == 20 ) { Led7->turn_off();  }
+            if ( batt_frame == 30 ) { Led7->turn_off(); Led6->turn_off(); }
+            if ( batt_frame == 40 ) { Led7->turn_off(); Led6->turn_off(); Led5->turn_off();  }
+            if ( batt_frame == 50 ) { Led7->turn_off(); Led6->turn_off(); Led5->turn_off(); Led4->turn_off(); }
+            if ( batt_frame == 60 ) { 
+                  if ( inverter_battery_soc >= 75)            { Led4->turn_on(); Led5->turn_on();  Led6->turn_on();   Led7->turn_on();  } 
+                  if ( inverter_battery_soc >= 50 and inverter_battery_soc < 75) { Led4->turn_on(); Led5->turn_on();  Led6->turn_on();   Led7->turn_off(); }
+                  if ( inverter_battery_soc >= 25 and inverter_battery_soc < 50) { Led4->turn_on(); Led5->turn_on();  Led6->turn_off();  Led7->turn_off(); } 
+                  if ( inverter_battery_soc <  25 )           { Led4->turn_on(); Led5->turn_off(); Led6->turn_off();  Led7->turn_off(); }
+                }
+            if ( batt_frame == 70 ) { Led7->turn_off(); Led6->turn_off(); Led5->turn_off(); Led4->turn_off(); }   
+        }
       }
       
       i++;
