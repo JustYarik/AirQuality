@@ -1147,9 +1147,9 @@ void setup() {
   //     \ \"h %.f\", id(internal_humidity).state); \n    }\n    else if (i == 7 * fraimtime)\n
   //     \    {\n      if (battery_state == \"discharging\" or  battery_state == \"charging\"
   //     )\n      {\n        it.printf(0, \"        \" );\n        it.printf(0, \"deye\"
-  //     ); \n        it.printf(4, \"%d\", inverter_battery_soc); \n      }\n      else \n
-  //     \      {\n        it.printf(0, \"        \" );\n        it.printf(0, \"PrS \");
-  //     \ \n        it.printf(4, \"%.1f\", id(air_preasure).state); \n      }\n      \n
+  //     ); \n        it.printf(4, \" %d\", inverter_battery_soc); \n      }\n      else
+  //     \ \n      {\n        it.printf(0, \"        \" );\n        it.printf(0, \"PrS \"
+  //     ); \n        it.printf(4, \"%.1f\", id(air_preasure).state); \n      }\n      \n
   //     \       dtostrf(id(internal_temperature2).state, 8, 2, str);\n       ESP_LOGI(\"
   //     main\", str );\n\n    }\n    else if (i == 8 * fraimtime)\n    {\n       it.printf(0,
   //     \ \"        \" );\n       it.printf(0, \"GAS \" ); \n       it.printf(4, \"
@@ -1502,7 +1502,7 @@ void setup() {
             {
               it.printf(0, "        " );
               it.printf(0, "deye"); 
-              it.printf(4, "%d", inverter_battery_soc); 
+              it.printf(4, " %d", inverter_battery_soc); 
             }
             else 
             {

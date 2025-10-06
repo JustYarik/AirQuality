@@ -559,7 +559,7 @@ display:
           {
             it.printf(0, "        " );
             it.printf(0, "deye"); 
-            it.printf(4, "%d", inverter_battery_soc); 
+            it.printf(4, " %d", inverter_battery_soc); 
           }
           else 
           {
